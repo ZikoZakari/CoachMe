@@ -1,0 +1,11 @@
+Options -Indexes
+
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "\.json$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

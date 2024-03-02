@@ -1,0 +1,11 @@
+{
+    "name": "islem/sports-app",
+    "autoload": {
+        "psr-4": {
+            "Classes\\Database\\": "Classes/Database",
+            "Classes\\Users\\": "Classes/Users",
+            "Classes\\Utils\\": "Classes/Utils"
+        }
+    },
+    "require": {}
+}
