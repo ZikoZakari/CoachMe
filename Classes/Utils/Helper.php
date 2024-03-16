@@ -70,4 +70,9 @@ class Helper {
             return true;
         return false;
     }
+
+    public static function md5Hash($str)
+    {
+        return md5($str);
+    }
 }
