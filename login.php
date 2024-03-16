@@ -1,13 +1,55 @@
 <?php 
+use Classes\Users\User;
+use Classes\Utils\Helper;
 
 include_once "core.php";
 
-use Classes\Database\Db;
-
-$database = new DB();
-
 /* header */
 include_once "header.php";
+
+/* app logic */
+
+if(Helper::checkIfConnected())
+{
+    header('Location: profile.php');
+    exit();
+}
+
+if(!empty($_POST["email"]) && !empty($_POST["password"]))
+{
+    // convert array to variable format 
+    extract($_POST);
+    // valiadating email
+    if(Helper::validateEmail($email))
+    {
+        $user = new User();
+        $user_info = $user->login($email,$password);
+
+        // checking if login successful
+        if($user_info[1])
+        {
+            // Adding session
+            $_SESSION['id'] = $user_info[0]->id;
+            $_SESSION['username'] = $user_info[0]->username;
+            $_SESSION['email'] = $user_info[0]->email;
+
+            // Redirecting to profile page
+            header('Location: profile.php');
+            exit();
+        }
+        else
+        {
+            $errorMsg = Helper::flushMessage("Email/ Mot de passe incorrect","alert alert-danger text-center");
+        }
+
+
+    }
+    else
+    {
+        $errorMsg = Helper::flushMessage("Veuillez saisir votre email correctement","alert alert-danger text-center");
+    }
+}
+
 ?>
 <!--  Header -->
 <div class="container">
@@ -46,13 +88,14 @@ include_once "header.php";
             </p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
-            <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+            <form method="POST" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+                <?= isset($errorMsg) ? $errorMsg : '';?>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" />
+                    <input type="email" class="form-control" name="email" id="floatingInput" placeholder="name@example.com" />
                     <label for="floatingInput">Email address</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" />
+                    <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password" />
                     <label for="floatingPassword">Password</label>
                 </div>
                 <div class="checkbox mb-3">

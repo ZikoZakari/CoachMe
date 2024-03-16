@@ -58,4 +58,16 @@ class Helper {
         return $env;
 
     }
+
+    public static function flushMessage($msg,$class)
+    {
+        return "<div class=\"$class\">$msg</div>";
+    }
+
+    public static function checkIfConnected()
+    {
+        if(!empty($_SESSION))
+            return true;
+        return false;
+    }
 }
