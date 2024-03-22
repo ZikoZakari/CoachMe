@@ -31,6 +31,11 @@ class Helper {
             return true;
     }
 
+    public static function extractUsernameFromEmail($email)
+    {
+        return explode('@',$email)[0];
+    }
+
     public static function sanitizeString($str)
     {
         return htmlspecialchars($str);
@@ -74,5 +79,19 @@ class Helper {
     public static function md5Hash($str)
     {
         return md5($str);
+    }
+
+    public static function genderRange($gender)
+    {
+       if ($gender == 'F' || $gender == 'M' || $gender == 'O')
+            return true;
+        return false;
+    }
+
+    public static function userRoleRange($role)
+    {
+        if ($role == 'Coach' || $role == 'Client')
+            return true;
+        return false;
     }
 }

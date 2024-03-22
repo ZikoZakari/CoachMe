@@ -3,10 +3,83 @@
 include_once "core.php";
 
 use Classes\Database\Db;
+use Classes\Utils\Helper;
+use Classes\Users\User;
 
 $database = new DB();
 
 include_once "header.php";
+
+/* App logic*/
+
+if(isset($_POST['register']))
+{
+    if(!empty($_POST["fname"]) && !empty($_POST["lname"]) && !empty($_POST["address"]) && !empty($_POST["gender"]) && !empty($_POST["email"]) && !empty($_POST["password"]) && !empty($_POST["passwordc"]) && !empty($_POST["role"]) && !empty($_POST["city"]))
+    {
+        // convert data array to variable
+        extract($_POST);
+        //var_dump($_POST);
+
+        // sanitize inputs
+        $fname = Helper::sanitizeString($fname);
+        $lname = Helper::sanitizeString($lname);
+        $address = Helper::sanitizeString($address);
+        $city = Helper::sanitizeString($city);
+
+        if(Helper::validateName($fname) && Helper::validateName($lname))
+        {
+            if(Helper::validateEmail($email))
+            {
+                    // extract username from email
+                    $username = Helper::extractUsernameFromEmail($email);
+                if(Helper::genderRange($gender))
+                {
+                    if(Helper::userRoleRange($role))
+                    {
+                        if($password === $passwordc)
+                        {
+                            try{
+                                $user = new User();
+                                $user->register($fname,$lname,$address,$city,$gender,$email,$username,$password,$role);
+                                $msg = Helper::flushMessage("Votre compte a été crée avec succès","alert alert-success text-center");
+                            }
+                            catch(Exception $e)
+                            {
+                                $msg = Helper::flushMessage("Compte existe déja","alert alert-danger text-center");
+                            }
+
+                        }
+                        else
+                        {
+                            $msg = Helper::flushMessage("Veuillez confirmer votre mot de passe correctement","alert alert-danger text-center");
+                        }
+                    }
+                    else
+                    {
+                        $msg = Helper::flushMessage("Veuillez choisir votre role correctement","alert alert-danger text-center");
+                    }
+                }
+                else
+                {
+                    $msg = Helper::flushMessage("Veuillez choisir votre genre correctement","alert alert-danger text-center");
+                }
+            }
+            else
+            {
+                $msg = Helper::flushMessage("Veuillez saissire votre email correctement","alert alert-danger text-center");
+            }
+        }
+        else
+        {
+            $msg = Helper::flushMessage("Veuillez saissire votre nom correctement","alert alert-danger text-center");
+        }
+
+    }
+    else
+    {
+        $msg = Helper::flushMessage("Veuillez remplire tous les champs necessaire","alert alert-danger text-center");
+    }
+}
 ?>
 
 <!--  Header -->
@@ -50,95 +123,96 @@ include_once "header.php";
                         <div class="col-xl-6">
                             <div class="card-body p-md-5">
                                 <h3 class="mb-5 text-uppercase">registration</h3>
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <div class="form-floating">
-                                            <input type="text" id="firstName" placeholder="First name"
-                                                class="form-control form-control-lg" />
-                                            <label for="firstName">First name</label>
+                                <form method="POST">
+                                    <?= isset($msg) ? $msg : '';?>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-floating">
+                                                <input type="text" id="firstName" name="fname" placeholder="First name"
+                                                    class="form-control form-control-lg" />
+                                                <label for="firstName">First name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-floating">
+                                                <input type="text" placeholder="Last name" name="lname" id="lastName"
+                                                    class="form-control form-control-lg" />
+                                                <label for="lastName">Last name</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-4">
-                                        <div class="form-floating">
-                                            <input type="text" placeholder="Last name" id="lastName"
-                                                class="form-control form-control-lg" />
-                                            <label for="lastName">Last name</label>
+                                    <div class="form-floating mb-4">
+                                        <input type="text" placeholder id="address" name="address" class="form-control form-control-lg" />
+                                        <label for="address">Address</label>
+                                    </div>
+                                    <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
+                                        <h6 class="mb-0 me-4">Gender:</h6>
+
+                                        <div class="form-check form-check-inline mb-0 me-4">
+                                            <input class="form-check-input" type="radio" name="gender" id="femaleGender"
+                                                value="F" />
+                                            <label class="form-check-label" for="femaleGender">Female</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline mb-0 me-4">
+                                            <input class="form-check-input" type="radio" name="gender" id="maleGender"
+                                                value="M" />
+                                            <label class="form-check-label" for="maleGender">Male</label>
+                                        </div>
+
+                                        <div class="form-check form-check-inline mb-0">
+                                            <input class="form-check-input" type="radio" name="gender" id="otherGender"
+                                                value="O" />
+                                            <label class="form-check-label" for="otherGender">Other</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-floating mb-4">
-                                    <input type="text" placeholder id="address" class="form-control form-control-lg" />
-                                    <label for="address">Address</label>
-                                </div>
-                                <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-                                    <h6 class="mb-0 me-4">Gender:</h6>
-
-                                    <div class="form-check form-check-inline mb-0 me-4">
-                                        <input class="form-check-input" type="radio" name="gender" id="femaleGender"
-                                            value="femme" />
-                                        <label class="form-check-label" for="femaleGender">Female</label>
+                                    <div class="form-floating mb-4">
+                                        <input type="text" placeholder id="email" name="email" class="form-control form-control-lg" />
+                                        <label for="email">Email</label>
                                     </div>
-
-                                    <div class="form-check form-check-inline mb-0 me-4">
-                                        <input class="form-check-input" type="radio" name="gender" id="maleGender"
-                                            value="male" />
-                                        <label class="form-check-label" for="maleGender">Male</label>
-                                    </div>
-
-                                    <div class="form-check form-check-inline mb-0">
-                                        <input class="form-check-input" type="radio" name="gender" id="otherGender"
-                                            value="autre" />
-                                        <label class="form-check-label" for="otherGender">Other</label>
-                                    </div>
-                                </div>
-                                <div class="form-floating mb-4">
-                                    <input type="text" placeholder id="email" class="form-control form-control-lg" />
-                                    <label for="email">Email</label>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <div class="form-floating">
-                                            <input type="password" id="password" placeholder="Password"
-                                                class="form-control form-control-lg" />
-                                            <label for="password">Password</label>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-floating">
+                                                <input type="password" id="password" name="password" placeholder="Password"
+                                                    class="form-control form-control-lg" />
+                                                <label for="password">Password</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="form-floating">
+                                                <input type="password" placeholder="Confirm password" id="passwordc" name="passwordc"
+                                                    class="form-control form-control-lg" />
+                                                <label for="cpassword">Confirm password</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-4">
-                                        <div class="form-floating">
-                                            <input type="password" placeholder="Confirm password" id="cpassword"
-                                                class="form-control form-control-lg" />
-                                            <label for="cpassword">Confirm password</label>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4">
+                                            <select class="form-select form-select-lg" id="role" name="role">
+                                                <option disabled selected>
+                                                    Select your position
+                                                </option>
+                                                <option value="Coach">Coach</option>
+                                                <option value="Client">Client</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-4">
+                                            <select class="form-select form-select-lg" id="city" name="city">
+                                                <option value="1">City</option>
+                                                <option value="2">Option 1</option>
+                                                <option value="3">Option 2</option>
+                                                <option value="4">Option 3</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <select class="form-select form-select-lg">
-                                            <option disabled selected>
-                                                Select your position
-                                            </option>
-                                            <option value="coach">Coach</option>
-                                            <option value="client">Client</option>
-                                        </select>
+                                    <div class="d-flex justify-content-end pt-3">
+                                        <button type="button" class="btn btn-light btn-lg">
+                                            Reset all
+                                        </button>
+                                        <input type="submit" class="btn btn-warning btn-lg ms-2" name="register" value="Register now">
                                     </div>
-                                    <div class="col-md-6 mb-4">
-                                        <select class="form-select form-select-lg">
-                                            <option value="1">City</option>
-                                            <option value="2">Option 1</option>
-                                            <option value="3">Option 2</option>
-                                            <option value="4">Option 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="d-flex justify-content-end pt-3">
-                                    <button type="button" class="btn btn-light btn-lg">
-                                        Reset all
-                                    </button>
-                                    <button type="button" class="btn btn-warning btn-lg ms-2">
-                                        Submit form
-                                    </button>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>

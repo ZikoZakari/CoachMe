@@ -25,4 +25,14 @@ class User{
         return [$data,$count];
     }
 
+    public function register($fname,$lname,$address,$city,$gender,$email,$username,$password,$role)
+    {
+        $sql = "INSERT INTO users(fname,lname,address,city,gender,role,email,username,password) VALUES (?,?,?,?,?,?,?,?,?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $password = Helper::md5Hash($password);
+        $stmt->execute([$fname,$lname,$address,$city,$gender,$role,$email,$username,$password]);
+    }
+
 }
