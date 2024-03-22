@@ -1,6 +1,7 @@
 <?php 
 use Classes\Users\User;
 use Classes\Utils\Helper;
+use Classes\Newsletter\Newslatter;
 
 include_once "core.php";
 
@@ -47,6 +48,36 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]))
     else
     {
         $errorMsg = Helper::flushMessage("Veuillez saisir votre email correctement","alert alert-danger text-center");
+    }
+}
+
+/* Newslatter */
+
+if(isset($_POST['nl-sub']))
+{
+    extract($_POST);
+    if(!empty($nlEmail))
+    {
+        if(Helper::validateEmail($nlEmail))
+        {
+            // get ip
+            $ip = $_SERVER['REMOTE_ADDR'];
+
+            try{
+                $newslatter = new Newslatter();
+                $newslatter->add($nlEmail,$ip);
+                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès","alert alert-success text-center");
+            }
+            catch(Exception $e)
+            {
+                $nlMsg = Helper::flushMessage("Erreur de l'abonnement","alert alert-danger text-center");
+            }
+            
+        }
+        else
+        {
+            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement","alert alert-danger text-center");
+        }
     }
 }
 
@@ -180,13 +211,14 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]))
             </div>
 
             <div class="col-md-5 offset-md-1 mb-3">
-                <form>
+                <form method="POST">
+                    <?= isset($nlMsg) ? $nlMsg : '' ;?>
                     <h5>Subscribe to our newsletter</h5>
                     <p>Monthly digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">
                         <label for="newsletter1" class="visually-hidden">Email address</label>
-                        <input id="newsletter1" type="text" class="form-control" placeholder="Email address" />
-                        <button class="btn btn-primary" type="button">Subscribe</button>
+                        <input id="newsletter1" type="email" class="form-control" name="nlEmail" placeholder="Email address" />
+                        <input class="btn btn-primary" type="submit" name="nl-sub" value="Subscribe">
                     </div>
                 </form>
             </div>
