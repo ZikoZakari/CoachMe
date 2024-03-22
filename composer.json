@@ -4,7 +4,8 @@
         "psr-4": {
             "Classes\\Database\\": "Classes/Database",
             "Classes\\Users\\": "Classes/Users",
-            "Classes\\Utils\\": "Classes/Utils"
+            "Classes\\Utils\\": "Classes/Utils",
+            "Classes\\Newsletter\\": "Classes/Newslatters"
         }
     },
     "require": {}
