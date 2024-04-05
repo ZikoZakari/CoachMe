@@ -36,14 +36,14 @@ include_once "header.php"; ?>
         <div class="row gy-4 gy-lg-0">
           <div class="col-12 col-lg-4 col-xl-3">
             <div class="row gy-4">
-              <div class="position-sticky sticky-lg-top pt-lg-1 col-12">
+              <div class=" pt-lg-1 col-12">
                 <div class="card widget-card shadow-sm">
                   <div class="card-header text-bg-primary">
                     Welcome, Ethan Leo
                   </div>
                   <div class="card-body">
                     <div class="text-center mb-3">
-                      <img
+                      <img width="120px"
                         src="./static/images/profile-img-1.jpg"
                         class="img-fluid rounded-circle"
                         alt="Luna John"
@@ -84,7 +84,7 @@ include_once "header.php"; ?>
                   </div>
                 </div>
               </div>
-              <div class="position-sticky col-12">
+              <!-- <div class="position-sticky col-12">
                 <div class="card widget-card shadow-sm">
                   <div class="card-header text-bg-primary">Social Accounts</div>
                   <div class="card-body">
@@ -114,8 +114,8 @@ include_once "header.php"; ?>
                     </a>
                   </div>
                 </div>
-              </div>
-              <div class="col-12">
+              </div> -->
+              <!-- <div class="col-12">
                 <div class="card widget-card shadow-sm">
                   <div class="card-header text-bg-primary">About Me</div>
                   <div class="card-body">
@@ -144,7 +144,7 @@ include_once "header.php"; ?>
                     </ul>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="col-12">
                 <div class="card widget-card shadow-sm">
                   <div class="card-header text-bg-primary">Skills</div>
@@ -258,7 +258,7 @@ include_once "header.php"; ?>
                       >
                         <div class="p-2">Leo</div>
                       </div>
-                      <div class="col-5 col-md-3 border-bottom border-3">
+                      <!-- <div class="col-5 col-md-3 border-bottom border-3">
                         <div class="p-2">Education</div>
                       </div>
                       <div
@@ -281,7 +281,7 @@ include_once "header.php"; ?>
                         class="col-7 col-md-9 border-start border-bottom border-3"
                       >
                         <div class="p-2">United States</div>
-                      </div>
+                      </div> -->
                       <div class="col-5 col-md-3 border-bottom border-3">
                         <div class="p-2">Job</div>
                       </div>
@@ -290,14 +290,14 @@ include_once "header.php"; ?>
                       >
                         <div class="p-2">Project Manager</div>
                       </div>
-                      <div class="col-5 col-md-3 border-bottom border-3">
+                      <!-- <div class="col-5 col-md-3 border-bottom border-3">
                         <div class="p-2">Company</div>
                       </div>
                       <div
                         class="col-7 col-md-9 border-start border-bottom border-3"
                       >
                         <div class="p-2">GitHub Inc</div>
-                      </div>
+                      </div> -->
                       <div class="col-5 col-md-3 border-bottom border-3">
                         <div class="p-2">Phone</div>
                       </div>
@@ -330,8 +330,8 @@ include_once "header.php"; ?>
                             >Profile Image</label
                           >
                           <div class="col-12">
-                            <img
-                              src="./images/profile-img-1.jpg"
+                            <img width="100px"
+                              src="./static/images/profile-img-1.jpg"
                               class="img-fluid"
                               alt="Luna John"
                             />
@@ -374,7 +374,7 @@ include_once "header.php"; ?>
                           value="Leo"
                         />
                       </div>
-                      <div class="col-12 col-md-6">
+                      <!-- <div class="col-12 col-md-6">
                         <label for="inputEducation" class="form-label"
                           >Education</label
                         >
@@ -384,7 +384,7 @@ include_once "header.php"; ?>
                           id="inputEducation"
                           value="M.S Computer Science"
                         />
-                      </div>
+                      </div> -->
                       <div class="col-12 col-md-6">
                         <label for="inputSkills" class="form-label"
                           >Skills</label
@@ -405,7 +405,7 @@ include_once "header.php"; ?>
                           value="Project Manager"
                         />
                       </div>
-                      <div class="col-12 col-md-6">
+                      <!-- <div class="col-12 col-md-6">
                         <label for="inputCompany" class="form-label"
                           >Company</label
                         >
@@ -415,7 +415,7 @@ include_once "header.php"; ?>
                           id="inputCompany"
                           value="GitHub Inc"
                         />
-                      </div>
+                      </div> -->
                       <div class="col-12 col-md-6">
                         <label for="inputPhone" class="form-label">Phone</label>
                         <input
@@ -434,7 +434,7 @@ include_once "header.php"; ?>
                           value="leo@example.com"
                         />
                       </div>
-                      <div class="col-12 col-md-6">
+                      <!-- <div class="col-12 col-md-6">
                         <label for="inputAddress" class="form-label"
                           >Address</label
                         >
@@ -793,8 +793,8 @@ include_once "header.php"; ?>
                           <option value="Zambia">Zambia</option>
                           <option value="Zimbabwe">Zimbabwe</option>
                         </select>
-                      </div>
-                      <div class="col-12 col-md-6">
+                      </div> -->
+                      <!-- <div class="col-12 col-md-6">
                         <label for="inputYouTube" class="form-label"
                           >YouTube</label
                         >
@@ -835,7 +835,7 @@ include_once "header.php"; ?>
                           id="inputLinkedIn"
                           value="https://www.linkedin.com/EthanLeo"
                         />
-                      </div>
+                      </div> -->
                       <div class="col-12">
                         <label for="inputAbout" class="form-label">About</label>
                         <textarea class="form-control" rows="5" id="inputAbout">
