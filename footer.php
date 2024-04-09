@@ -82,7 +82,7 @@
             </svg>
           </button>
         </li>
-        <li>
+        <!-- <li>
           <button
             type="button"
             class="dropdown-item d-flex align-items-center"
@@ -97,7 +97,7 @@
               <use href="#check2"></use>
             </svg>
           </button>
-        </li>
+        </li> -->
       </ul>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">

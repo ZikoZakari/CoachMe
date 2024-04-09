@@ -23,7 +23,7 @@ include_once "header.php"; ?>
                 <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
             </div>
         </div>
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-3 row-cols-xl-4">
             <div class="col mb-5">
                 <div class="card h-100">
                     <img class="card-img-top" src="./static/images/profile-img-1.jpg" alt="..." />
