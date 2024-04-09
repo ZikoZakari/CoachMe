@@ -98,7 +98,7 @@
 
 /* Declare heights because of positioning of img element */
 .carousel-item {
-  height: 32rem;
+  height: 36rem;
 }
 
 /* MARKETING CONTENT
@@ -153,20 +153,15 @@
   }
 }
 
-.carousel-1{
-  background-image: url(../images/carousel-1.jpg);
-  background-repeat: no-repeat;
-  background-size: 100%;
+.rec {
+  top: 49%;
+  left: 25%;
+} 
+
+.opc{
+  background-color: black;
 }
 
-.carousel-2{
-  background-image: url(../images/carousel-2.jpg);
-  background-repeat: no-repeat;
-  background-size: 100%;
-}
-
-.carousel-3{
-  background-image: url(../images/carousel-3.jpg);
-  background-repeat: no-repeat;
-  background-size: 100%;
+.opc img{
+  filter: opacity(50%);
 }

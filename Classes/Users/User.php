@@ -11,7 +11,7 @@ class User{
     public function login($username,$password)
     {
         // forging query
-        $sql = "SELECT id,email,username FROM users WHERE email = ? AND password = ?";
+        $sql = "SELECT id,email,username,role FROM users WHERE email = ? AND password = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         // hashing the clear password
@@ -23,6 +23,12 @@ class User{
         $count = $stmt->rowCount();
 
         return [$data,$count];
+    }
+
+    public function logout(){
+        session_start();
+        session_destroy();
+        header('Location: login.php');
     }
 
     public function register($fname,$lname,$address,$city,$gender,$email,$username,$password,$role)

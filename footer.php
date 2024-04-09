@@ -82,22 +82,6 @@
             </svg>
           </button>
         </li>
-        <!-- <li>
-          <button
-            type="button"
-            class="dropdown-item d-flex align-items-center"
-            data-bs-theme-value="auto"
-            aria-pressed="false"
-          >
-            <svg class="bi me-2 opacity-50" width="1em" height="1em">
-              <use href="#circle-half"></use>
-            </svg>
-            Auto
-            <svg class="bi ms-auto d-none" width="1em" height="1em">
-              <use href="#check2"></use>
-            </svg>
-          </button>
-        </li> -->
       </ul>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -146,7 +130,9 @@
         ></path>
       </symbol>
     </svg>
-<script src="static/js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
     <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="static/js/index.js"></script>
   </body>
 </html>

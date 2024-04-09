@@ -33,7 +33,7 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]))
             $_SESSION['id'] = $user_info[0]->id;
             $_SESSION['username'] = $user_info[0]->username;
             $_SESSION['email'] = $user_info[0]->email;
-
+            $_SESSION['role'] = $user_info[0]->role;
             // Redirecting to profile page
             header('Location: profile.php');
             exit();

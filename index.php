@@ -34,22 +34,8 @@ include_once "header.php";
           ></button>
         </div>
         <div class="carousel-inner">
-          <div class="carousel-item active carousel-1">
-            <svg
-              class="bd-placeholder-img"
-              width="100%"
-              height="100%"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-            >
-              <rect
-                width="100%"
-                height="100%"
-                fill="var(--bs-secondary-color)"
-              />
-            </svg>
+          <div class="carousel-item active carousel-1 opc">
+            <img src="./static/images/carousel-1.jpg" class="h-100 w-100 object-fit-cover">
             <div class="container">
               <div class="carousel-caption text-start">
                 <h1>Example headline.</h1>
@@ -63,22 +49,8 @@ include_once "header.php";
               </div>
             </div>
           </div>
-          <div class="carousel-item carousel-2">
-            <svg
-              class="bd-placeholder-img"
-              width="100%"
-              height="100%"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-            >
-              <rect
-                width="100%"
-                height="100%"
-                fill="var(--bs-secondary-color)"
-              />
-            </svg>
+          <div class="carousel-item carousel-2 opc">
+            <img src="./static/images/carousel-2.jpg" class="h-100 w-100 object-fit-cover">
             <div class="container">
               <div class="carousel-caption">
                 <h1>Another example headline.</h1>
@@ -90,22 +62,8 @@ include_once "header.php";
               </div>
             </div>
           </div>
-          <div class="carousel-item carousel-3">
-            <svg
-              class="bd-placeholder-img"
-              width="100%"
-              height="100%"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-            >
-              <rect
-                width="100%"
-                height="100%"
-                fill="var(--bs-secondary-color)"
-              />
-            </svg>
+          <div class="carousel-item carousel-3 opc">
+            <img src="./static/images/carousel-3.jpg" class="h-100 w-100 object-fit-cover">
             <div class="container">
               <div class="carousel-caption text-end">
                 <h1>One more for good measure.</h1>
