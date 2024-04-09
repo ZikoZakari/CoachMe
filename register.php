@@ -113,30 +113,6 @@ if(isset($_POST['nl-sub']))
 }
 ?>
 
-<!--  Header -->
-<div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
-        <div class="col-md-3 mb-2 mb-md-0">
-            <a href="/" class="d-inline-flex fs-4 link-body-emphasis text-decoration-none" aria-current="page">
-                Coach<span class="">Me</span>
-            </a>
-        </div>
-
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="#" class="nav-link px-2">Features</a></li>
-            <li><a href="#" class="nav-link px-2">Pricing</a></li>
-            <li><a href="#" class="nav-link px-2">FAQs</a></li>
-            <li><a href="#" class="nav-link px-2">About</a></li>
-        </ul>
-
-        <div class="col-md-3 text-end">
-            <a href="/login.html" class="btn btn-outline-primary me-2"> Login </a>
-            <a href="/register.html" class="btn btn-primary">Sign-up</a>
-        </div>
-    </header>
-</div>
-<!--  Header end -->
 <main>
     <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -254,7 +230,7 @@ if(isset($_POST['nl-sub']))
 </main>
 <!-- footer -->
 <div class="container">
-    <footer class="py-5">
+    <footer class="pt-5">
         <div class="row">
             <div class="col-6 col-md-2 mb-3">
                 <h5>Section</h5>
@@ -331,27 +307,6 @@ if(isset($_POST['nl-sub']))
                     </div>
                 </form>
             </div>
-        </div>
-
-        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
-            <p>© 2024 Company, Inc. All rights reserved.</p>
-            <ul class="list-unstyled d-flex">
-                <li class="ms-3">
-                    <a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24">
-                            <use xlink:href="#twitter"></use>
-                        </svg></a>
-                </li>
-                <li class="ms-3">
-                    <a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24">
-                            <use xlink:href="#instagram"></use>
-                        </svg></a>
-                </li>
-                <li class="ms-3">
-                    <a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24">
-                            <use xlink:href="#facebook"></use>
-                        </svg></a>
-                </li>
-            </ul>
         </div>
     </footer>
 </div>
