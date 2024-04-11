@@ -5,7 +5,8 @@
             "Classes\\Database\\": "Classes/Database",
             "Classes\\Users\\": "Classes/Users",
             "Classes\\Utils\\": "Classes/Utils",
-            "Classes\\Newsletter\\": "Classes/Newslatters"
+            "Classes\\Newsletter\\": "Classes/Newslatters",
+            "Classes\\Coachs\\": "Classes/Coachs"
         }
     },
     "require": {}
