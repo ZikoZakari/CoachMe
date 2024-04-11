@@ -2,10 +2,17 @@
 include_once "core.php";
 include_once "header.php";
 
-if (empty($_SESSION['username'])) {
+if (empty($_SESSION)) {
   header('Location: login.php');
   exit();
 }
+
+//*** decoment affter ending all modif ***//
+// if (($_SESSION['role'] === 'Admin') {
+//     header('Location: dashboard.php');
+//     exit();
+// }
+//***                                   ***/
 ?>
 
 <section class="py-3 py-md-5 py-xl-8">
