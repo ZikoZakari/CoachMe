@@ -8,7 +8,7 @@ if (empty($_SESSION)) {
 }
 
 //*** decoment affter ending all modif ***//
-// if (($_SESSION['role'] === 'Admin') {
+// if ($_SESSION['role'] === 'Admin') {
 //     header('Location: dashboard.php');
 //     exit();
 // }
@@ -162,7 +162,7 @@ if (empty($_SESSION)) {
                   </div>
                   <div class="col-12 col-md-4">
                     <label for="inputUsername" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="inputUsername" value="Ethan123" disabled/>
+                    <input type="text" class="form-control" id="inputUsername" value="Ethan123" disabled />
                   </div>
                   <div class="col-12">
                     <label for="inputAbout" class="form-label">About</label>
@@ -238,7 +238,56 @@ if (empty($_SESSION)) {
               <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
                 <form action="#!">
                   <fieldset class="row gy-3 gy-md-0">
-                    
+                    <table id="example" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>First name</th>
+                          <th>Last name</th>
+                          <th>Message</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Hamid</td>
+                          <td>Taki</td>
+                          <td>Salam elikom</td>
+                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                        </tr>
+                        <tr>
+                          <td>Yacine</td>
+                          <td>Mahi</td>
+                          <td>Kemelt</td>
+                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                        </tr>
+                        <tr>
+                          <td>islem</td>
+                          <td>meghnine</td>
+                          <td>test</td>
+                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                        </tr>
+                        <tr>
+                          <td>omar</td>
+                          <td>bell</td>
+                          <td>Hello Hello</td>
+                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                        </tr>
+                        <tr>
+                          <td>Tokyo</td>
+                          <td>Chine</td>
+                          <td>:/</td>
+                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                        </tr>
+                      </tbody>
+                      <!-- <tfoot>
+                        <tr>
+                          <th>First name</th>
+                          <th>Last name</th>
+                          <th>Message</th>
+                          <th>...</th>
+                        </tr>
+                      </tfoot> -->
+                    </table>
                   </fieldset>
                 </form>
               </div>

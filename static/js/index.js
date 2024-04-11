@@ -11,3 +11,5 @@ var textareaIds = ['imputDetail'];
     textareaIds.forEach(function(id) {
       CKEDITOR.replace(id);
     });
+
+new DataTable('#example');
