@@ -6,25 +6,8 @@ $( '#multiple-select-custom-field' ).select2( {
     tags: true
 } );
 
-var textareaIds = [''];
+var textareaIds = ['imputDetail'];
 
     textareaIds.forEach(function(id) {
       CKEDITOR.replace(id);
     });
-
-// $(document).ready(function() {
-//     $('#logout').click(function() {
-//         // Requête AJAX pour appeler la fonction PHP
-//         $.ajax({
-//             url: '../../Classes/Users/User.php',
-//             type: 'POST',
-//             data: { action: 'logout' },
-//             success: function(response) {
-//                 alert(response); // Afficher la réponse de la fonction PHP
-//             },
-//             // error: function(xhr, status, error) {
-//             //     console.error(xhr.responseText); // Afficher l'erreur en cas d'échec
-//             // }
-//         });
-//     });
-// });

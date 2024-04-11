@@ -2,9 +2,9 @@
 include_once "core.php";
 include_once "header.php";
 
-if (empty($_SESSION['username'])){
+if (empty($_SESSION['username'])) {
   header('Location: login.php');
-    exit();
+  exit();
 }
 ?>
 
@@ -83,8 +83,13 @@ if (empty($_SESSION['username'])){
                 </button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="email-tab" data-bs-toggle="tab" data-bs-target="#email-tab-pane" type="button" role="tab" aria-controls="email-tab-pane" aria-selected="false">
-                  Emails
+                <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab-pane" type="button" role="tab" aria-controls="detail-tab-pane" aria-selected="false">
+                  Details
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
+                  Contact
                 </button>
               </li>
               <li class="nav-item" role="presentation">
@@ -118,30 +123,6 @@ if (empty($_SESSION['username'])){
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
                     <div class="p-2">Leo</div>
                   </div>
-                  <!-- <div class="col-5 col-md-3 border-bottom border-3">
-                        <div class="p-2">Education</div>
-                      </div>
-                      <div
-                        class="col-7 col-md-9 border-start border-bottom border-3"
-                      >
-                        <div class="p-2">M.S Computer Science</div>
-                      </div>
-                      <div class="col-5 col-md-3 border-bottom border-3">
-                        <div class="p-2">Address</div>
-                      </div>
-                      <div
-                        class="col-7 col-md-9 border-start border-bottom border-3"
-                      >
-                        <div class="p-2">Mountain View, California</div>
-                      </div>
-                      <div class="col-5 col-md-3 border-bottom border-3">
-                        <div class="p-2">Country</div>
-                      </div>
-                      <div
-                        class="col-7 col-md-9 border-start border-bottom border-3"
-                      >
-                        <div class="p-2">United States</div>
-                      </div> -->
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Job</div>
                   </div>
@@ -164,22 +145,6 @@ if (empty($_SESSION['username'])){
               </div>
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                 <form action="#!" class="row gy-3 gy-xxl-4">
-                  <div class="col-12">
-                    <div class="row gy-2">
-                      <label class="col-12 form-label m-0">Profile Image</label>
-                      <div class="col-12">
-                        <img width="100px" src="./static/images/profile-img-1.jpg" class="img-fluid" alt="Luna John" />
-                      </div>
-                      <div class="col-12">
-                        <a href="#!" class="d-inline-block bg-primary link-light lh-1 p-2 rounded">
-                          <i class="bi bi-upload"></i>
-                        </a>
-                        <a href="#!" class="d-inline-block bg-danger link-light lh-1 p-2 rounded">
-                          <i class="bi bi-trash"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
                   <div class="col-12 col-md-4">
                     <label for="inputFirstName" class="form-label">First Name</label>
                     <input type="text" class="form-control" id="inputFirstName" value="Ethan" />
@@ -190,12 +155,11 @@ if (empty($_SESSION['username'])){
                   </div>
                   <div class="col-12 col-md-4">
                     <label for="inputUsername" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="inputUsername" value="Ethan123" />
+                    <input type="text" class="form-control" id="inputUsername" value="Ethan123" disabled/>
                   </div>
                   <div class="col-12">
                     <label for="inputAbout" class="form-label">About</label>
-                    <textarea class="form-control" rows="5" id="inputAbout">
-                        Ethan Leo is a seasoned and results-driven Project Manager who brings experience and expertise to project management. With a proven track record of successfully delivering complex projects on time and within budget, Ethan Leo is the go-to professional for organizations seeking efficient and effective project leadership.</textarea>
+                    <textarea class="form-control" rows="5" id="inputAbout">Ethan Leo is a seasoned and results-driven Project Manager who brings experience and expertise to project management. With a proven track record of successfully delivering complex projects on time and within budget, Ethan Leo is the go-to professional for organizations seeking efficient and effective project leadership.</textarea>
                   </div>
                   <div class="col-12 col-md-6">
                     <label for="inputAdress" class="form-label">Adress</label>
@@ -242,6 +206,20 @@ if (empty($_SESSION['username'])){
                     <label for="inputJob" class="form-label">Job</label>
                     <input type="text" class="form-control" id="inputJob" value="Project Manager" />
                   </div>
+                  <div class="col-12 col-md-6">
+                    <label for="inputPictur" class="form-label">Photo de profile</label>
+                    <div class="input-group">
+                      <input type="file" class="form-control" id="inputPictur">
+                      <span class="input-group-text" id="inputPictur"><i class="bi bi-person-square"></i></span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <label for="inputCv" class="form-label">Votre CV</label>
+                    <div class="input-group">
+                      <input type="file" class="form-control" id="inputCv">
+                      <span class="input-group-text" id="inputCv"><i class="bi bi-paperclip"></i></span>
+                    </div>
+                  </div>
                   <div class="col-12">
                     <button type="submit" class="btn btn-primary">
                       Save Changes
@@ -249,37 +227,28 @@ if (empty($_SESSION['username'])){
                   </div>
                 </form>
               </div>
-              <div class="tab-pane fade" id="email-tab-pane" role="tabpanel" aria-labelledby="email-tab" tabindex="0">
+
+              <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
                 <form action="#!">
                   <fieldset class="row gy-3 gy-md-0">
-                    <legend class="col-form-label col-12 col-md-3 col-xl-2">
-                      Email Alerts
-                    </legend>
-                    <div class="col-12 col-md-9 col-xl-10">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="emailChange" />
-                        <label class="form-check-label" for="emailChange">
-                          Email Changed
-                        </label>
+                    
+                  </fieldset>
+                </form>
+              </div>
+
+              <div class="tab-pane fade" id="detail-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
+                <form action="#!">
+                  <fieldset class="row gy-3 gy-md-0">
+                    <div class="col-12 col-md-12 mb-3">
+                      <label for="inputPrice" class="form-label">Prix de base</label>
+                      <div class="input-group">
+                        <span class="input-group-text">€</span>
+                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                        <span class="input-group-text">.00</span>
                       </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="passwordChange" />
-                        <label class="form-check-label" for="passwordChange">
-                          Password Changed
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="weeklyNewsletter" />
-                        <label class="form-check-label" for="weeklyNewsletter">
-                          Weekly Newsletter
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="productPromotions" />
-                        <label class="form-check-label" for="productPromotions">
-                          Product Promotions
-                        </label>
-                      </div>
+                    </div>
+                    <div class="col-12 col-md-12">
+                      <textarea id="imputDetail"> text area </textarea>
                     </div>
                   </fieldset>
                   <div class="row">
@@ -291,6 +260,9 @@ if (empty($_SESSION['username'])){
                   </div>
                 </form>
               </div>
+
+
+
               <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
                 <form action="#!">
                   <div class="row gy-3 gy-xxl-4">

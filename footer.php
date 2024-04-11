@@ -130,9 +130,10 @@
         ></path>
       </symbol>
     </svg>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
     <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script src="static/js/index.js"></script>
   </body>
 </html>
