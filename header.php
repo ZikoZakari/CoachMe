@@ -15,10 +15,16 @@
 </head>
 
 <body>
-  <?php include_once "core.php";
+<?php include_once "core.php";
 
-  use Classes\Utils\Helper;
-  ?>
+use Classes\Utils\Helper;
+
+if (isset($_GET['logout'])) {
+  session_destroy();
+  header("Location: login.php");
+  exit;
+}
+?>
   <!--  Header end -->
   <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
@@ -56,7 +62,7 @@
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><button class="dropdown-item" id="logout">Sign out</button></li>
+              <li><a class="dropdown-item" href="profile.php?logout=1">Sign out</a></li>
             </ul>
           </div>
         <?php } else { ?><div class="text-end ">

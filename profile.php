@@ -237,13 +237,14 @@ if (empty($_SESSION)) {
 
               <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
                 <form action="#!">
-                  <fieldset class="row gy-3 gy-md-0">
-                    <table id="example" style="width:100%">
+                  <div class="row gy-3 gy-md-0">
+                    <table class="hover row-border stripe" id="example" style="width:100%">
                       <thead>
                         <tr>
                           <th>First name</th>
                           <th>Last name</th>
-                          <th>Message</th>
+                          <th>Numero de telephone</th>
+                          <th>Status</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -251,32 +252,37 @@ if (empty($_SESSION)) {
                         <tr>
                           <td>Hamid</td>
                           <td>Taki</td>
-                          <td>Salam elikom</td>
-                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                          <td>0768543658</td>
+                          <td>Waiting</td>
+                          <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
                         </tr>
                         <tr>
                           <td>Yacine</td>
                           <td>Mahi</td>
-                          <td>Kemelt</td>
-                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                          <td>0768577777</td>
+                          <td>Waiting</td>
+                          <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
                         </tr>
                         <tr>
                           <td>islem</td>
                           <td>meghnine</td>
-                          <td>test</td>
-                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                          <td>0556896467</td>
+                          <td>Waiting</td>
+                          <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
                         </tr>
                         <tr>
                           <td>omar</td>
                           <td>bell</td>
-                          <td>Hello Hello</td>
-                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                          <td>0665824563</td>
+                          <td>Waiting</td>
+                          <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
                         </tr>
                         <tr>
                           <td>Tokyo</td>
                           <td>Chine</td>
-                          <td>:/</td>
-                          <td class="d-flex justify-content-center"><button class="btn btn-bd-primary"> Contact</button></td>
+                          <td>0777966656</td>
+                          <td>Waiting</td>
+                          <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
                         </tr>
                       </tbody>
                       <!-- <tfoot>
@@ -288,7 +294,7 @@ if (empty($_SESSION)) {
                         </tr>
                       </tfoot> -->
                     </table>
-                  </fieldset>
+</div>
                 </form>
               </div>
 
