@@ -6,13 +6,23 @@ if (empty($_SESSION)) {
     exit();
 }
 
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+  }
     
-//*** decoment affter ending all modif ***//
-// if (($_SESSION['role'] === 'Client') || ($_SESSION['role'] === 'Coach')) {
-//     header('Location: profile.php');
-//     exit();
-// }
-//***                                   ***/
+
+if (($_SESSION['role'] === 'Client') || ($_SESSION['role'] === 'Coach')) {
+    header('Location: profile.php');
+    exit();
+}
+
+
+if (empty($_SESSION)) {
+    header('Location: login.php');
+    exit();
+}
 
 ?>
 <!DOCTYPE html>
@@ -104,15 +114,7 @@ if (empty($_SESSION)) {
                         <hr class="my-3" />
                         <ul class="nav flex-column mb-auto">
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#gear-wide-connected" />
-                                    </svg>
-                                    Settings
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="dashboard.php?logout=1">
                                     <svg class="bi">
                                         <use xlink:href="#door-closed" />
                                     </svg>
