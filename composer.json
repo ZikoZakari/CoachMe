@@ -7,7 +7,8 @@
             "Classes\\Utils\\": "Classes/Utils",
             "Classes\\Newsletter\\": "Classes/Newslatters",
             "Classes\\Coachs\\": "Classes/Coachs",
-            "Classes\\Uploads\\": "Classes/Uploads"
+            "Classes\\Uploads\\": "Classes/Uploads",
+            "Classes\\Contacts\\": "Classes/Contacts"
         }
     },
     "require": {}

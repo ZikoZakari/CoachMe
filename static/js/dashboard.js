@@ -48,3 +48,4 @@
   })()
   
 new DataTable('#dashboard');
+new DataTable('#users');

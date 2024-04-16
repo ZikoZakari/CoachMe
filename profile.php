@@ -126,12 +126,15 @@ if (isset($_POST['save-detail'])) {
                     <label for="pictur" class="btn btn-primary w-100">Nouvelle image</label>
                   </form>
                 </div>
+                <?php if ($_SESSION['role'] == 'Coach'){ ?>
                 <div class="text-center">
                   <form method="POST" enctype="multipart/form-data">
                     <input type="file" id="cv" name="cv" hidden onchange="this.form.submit()" />
                     <label for="cv" class="btn btn-warning w-100">Deposer votre CV ici</label>
                   </form>
                 </div>
+                <?php } ?>
+                
                 <!-- <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <h6 class="m-0">Followers</h6>
@@ -149,6 +152,7 @@ if (isset($_POST['save-detail'])) {
               </div>
             </div>
           </div>
+          <?php if ($_SESSION['role'] == 'Coach'){ ?>
           <div class="col-12">
             <div class="card widget-card shadow-sm">
               <div class="card-header text-bg-primary">Skills</div>
@@ -164,6 +168,7 @@ if (isset($_POST['save-detail'])) {
               </div>
             </div>
           </div>
+          <?php } ?>
         </div>
       </div>
       <div class="col-12 col-lg-8 col-xl-9">
@@ -180,6 +185,7 @@ if (isset($_POST['save-detail'])) {
                   Profile
                 </button>
               </li>
+              <?php if ($_SESSION['role'] == 'Coach'){ ?>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab-pane" type="button" role="tab" aria-controls="detail-tab-pane" aria-selected="false">
                   Details
@@ -190,6 +196,7 @@ if (isset($_POST['save-detail'])) {
                   Contact
                 </button>
               </li>
+              <?php } ?>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">
                   Mot de passe
@@ -306,7 +313,7 @@ if (isset($_POST['save-detail'])) {
                   </div>
                 </form>
               </div>
-
+              <?php if ($_SESSION['role'] == 'Coach'){ ?>
               <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
                 <div class="row gy-3 gy-md-0">
                   <table class="hover row-border stripe" id="example" style="width:100%">
@@ -320,20 +327,7 @@ if (isset($_POST['save-detail'])) {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Hamid</td>
-                        <td>Taki</td>
-                        <td>0768543658</td>
-                        <td>Waiting</td>
-                        <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
-                      </tr>
-                      <tr>
-                        <td>Yacine</td>
-                        <td>Mahi</td>
-                        <td>0768577777</td>
-                        <td>Waiting</td>
-                        <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
-                      </tr>
+
                       <tr>
                         <td>islem</td>
                         <td>meghnine</td>
@@ -341,20 +335,7 @@ if (isset($_POST['save-detail'])) {
                         <td>Waiting</td>
                         <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
                       </tr>
-                      <tr>
-                        <td>omar</td>
-                        <td>bell</td>
-                        <td>0665824563</td>
-                        <td>Waiting</td>
-                        <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
-                      </tr>
-                      <tr>
-                        <td>Tokyo</td>
-                        <td>Chine</td>
-                        <td>0777966656</td>
-                        <td>Waiting</td>
-                        <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
-                      </tr>
+                      
                     </tbody>
                   </table>
                 </div>
@@ -383,9 +364,7 @@ if (isset($_POST['save-detail'])) {
                   </div>
                 </form>
               </div>
-
-
-
+              <?php } ?>
               <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
                 <form action="#!">
                   <div class="row gy-3 gy-xxl-4">

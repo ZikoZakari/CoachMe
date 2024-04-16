@@ -114,4 +114,13 @@ class User{
         $stmt->execute([$id]);
     }
 
+    public function getAllUsers(){
+        $sql = "SELECT fname, lname, email, cv, role, status FROM users WHERE role != 'Admin'";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
 }

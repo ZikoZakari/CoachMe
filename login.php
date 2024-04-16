@@ -106,11 +106,11 @@ if(isset($_POST['nl-sub']))
                     <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password" />
                     <label for="floatingPassword">Password</label>
                 </div>
-                <div class="checkbox mb-3">
+                <!-- <div class="checkbox mb-3">
                     <label>
                         <input type="checkbox" value="remember-me" /> Remember me
                     </label>
-                </div>
+                </div> -->
                 <button class="w-100 btn btn-lg btn-primary" type="submit">
                     Sign up
                 </button>

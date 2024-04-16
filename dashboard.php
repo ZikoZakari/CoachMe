@@ -27,14 +27,24 @@ if (empty($_SESSION)) {
 
 $coach = new Coach;
 $coachs = $coach->getAllCoache();
-var_dump($_POST);
 
-if (isset($_POST['accept'])){
+$user = new User;
+$users = $user->getAllUsers();
+
+if (isset($_POST['accept'])) {
 
     extract($_POST);
-    
-    $user = new User;
-    $user->updateStatusUser($accept);
+
+    $profil = new User;
+    $profil->updateStatusUser($accept);
+}
+
+if (isset($_POST['message'])) {
+
+    extract($_POST);
+
+    $profil = new User;
+    // $profil->messageToUser($message);
 }
 
 ?>
@@ -140,8 +150,8 @@ if (isset($_POST['accept'])){
                 </div>
             </div>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="container-fluid py-3">
+            <main class="tab-content col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid py-3" >
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h2">Dashboard</h1>
@@ -163,12 +173,39 @@ if (isset($_POST['accept'])){
                                     <td><?= $coach->fname ?></td>
                                     <td><?= $coach->lname ?></td>
                                     <td><?= $coach->prix ?> € / Heure</td>
-                                    <td><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a></td>
+                                    <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else { echo "Pas de cv"; } ?></td>
                                     <td>
-                                        <form method="POST"><button type="submit" class="btn btn-success align-content-center" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button></form>
+                                        <form method="POST" class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-success w-100 me-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
+                                            <button type="message" class="btn btn-danger w-100 ms-1" id="message" name="message" value="<?= $coach->id ?>">Message</button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h2">All Clients</h1>
+                    </div>
+
+                    <table class="hover row-border stripe" id="users" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($users as $user) :
+                                if ( $user->role == 'Client'){ ?>
+                                <tr>
+                                    <td><?= $user->fname ?></td>
+                                    <td><?= $user->lname ?></td>
+                                    <td><?= $user->email ?></td>
+                                </tr>
+                            <?php } endforeach; ?>
                         </tbody>
                     </table>
                 </div>
