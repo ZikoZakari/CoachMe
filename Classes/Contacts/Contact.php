@@ -3,6 +3,7 @@
 namespace Classes\Contacts;
 
 use Classes\Database\Db;
+use PDO;
 
 class Contact{
     public function sendMessage($fullname,$email,$phone,$subject,$message){
@@ -11,5 +12,14 @@ class Contact{
         $stmt = $db->prepare($sql);
 
         $stmt->execute([$fullname,$email,$phone,$subject,$message]);
+    }
+
+    public function getAllMessages(){
+        $sql = "SELECT * FROM contact";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
     }
 }

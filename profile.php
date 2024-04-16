@@ -7,7 +7,7 @@ use Classes\Uploads\Upload;
 use Classes\Users\User;
 
 $user = new User();
-$user = $user->get_user_info($_SESSION['id']);
+$user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
 
 if (empty($_SESSION)) {
   header('Location: login.php');

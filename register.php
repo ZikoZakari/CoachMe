@@ -42,14 +42,15 @@ if(isset($_POST['register']))
                             try{
                                 $user = new User();
                                 $user->register($fname,$lname,$address,$city,$gender,$email,$username,$password,$role);
-                                $user->add_details($user->last_user()->id);
+                                if ($role == 'Coach'){
+                                    $user->add_details($user->last_user()->id);
+                                }
                                 $msg = Helper::flushMessage("Votre compte a été crée avec succès","alert alert-success text-center");
                             }
                             catch(Exception $e)
                             {
                                 $msg = Helper::flushMessage("Compte existe déja","alert alert-danger text-center");
                             }
-
                         }
                         else
                         {

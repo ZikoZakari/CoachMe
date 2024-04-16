@@ -67,7 +67,7 @@ if (!empty($_SESSION)) {
                 <hr class="dropdown-divider">
               </li>
               <?php if ($_SESSION['role'] === 'Admin') { ?>
-                <li><a class="dropdown-item" href="#">Admin</a></li>
+                <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
               <?php } else { ?>
                 <li><a class="dropdown-item" href="profile.php">Profile</a></li>
               <?php } ?>

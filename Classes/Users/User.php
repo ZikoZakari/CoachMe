@@ -68,8 +68,13 @@ class User{
         $stmt->execute([$prix,$detail,$id_user]);
     }
 
-    public function get_user_info($id){
-        $sql = "SELECT * FROM users U, details D WHERE U.id = D.id_user AND U.id = ?";
+    public function get_user_info($id,$role){
+        if($role == 'Coach'){
+            $sql = "SELECT * FROM users U, details D WHERE U.id = D.id_user AND U.id = ?";
+        }
+        if($role == 'Client'){
+            $sql = "SELECT * FROM users U WHERE U.id = ?";
+        }
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute([$id]);

@@ -2,7 +2,9 @@
 include_once "core.php";
 
 use Classes\Coachs\Coach;
+use Classes\Newsletter\Newslatter;
 use Classes\Users\User;
+use Classes\Contacts\Contact;
 
 if (empty($_SESSION)) {
     header('Location: login.php');
@@ -30,6 +32,12 @@ $coachs = $coach->getAllCoache();
 
 $user = new User;
 $users = $user->getAllUsers();
+
+$contact = new Contact;
+$contacts = $contact->getAllMessages();
+
+$newslatter = new Newslatter;
+$newslatters = $newslatter->get();
 
 if (isset($_POST['accept'])) {
 
@@ -176,8 +184,8 @@ if (isset($_POST['message'])) {
                                     <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else { echo "Pas de cv"; } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-success w-100 me-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
-                                            <button type="message" class="btn btn-danger w-100 ms-1" id="message" name="message" value="<?= $coach->id ?>">Message</button>
+                                            <button type="message" class="btn btn-danger w-100 me-1" id="message" name="message" value="<?= $coach->id ?>">Message</button>    
+                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -208,7 +216,55 @@ if (isset($_POST['message'])) {
                             <?php } endforeach; ?>
                         </tbody>
                     </table>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h2">Contact</h1>
+                    </div>
+
+                    <table class="hover row-border stripe" id="contacts" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th></th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contacts as $contact) : ?>
+                                <tr>
+                                    <td><?= $contact->name ?></td>
+                                    <td><?= $contact->email ?></td>
+                                    <td>test</td>
+                                    <td><?= $contact->subject ?></td>
+                                    <td><?= $contact->message ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
+
+                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h2">Newslatters</h1>
+                    </div>
+
+                    <table class="hover row-border stripe" id="newslatters" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($newslatters as $newslatter) : ?>
+                                <tr>
+                                    <td><?= $newslatter->email ?></td>
+                                    <td><?= $newslatter->ip ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
                 <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>

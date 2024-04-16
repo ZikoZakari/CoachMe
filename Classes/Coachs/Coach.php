@@ -26,7 +26,11 @@ class Coach{
     }
 
     public function getAllCoache(){
-        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, U.cv, U.status, D.prix, D.detail FROM users U, details D WHERE U.status = '0' AND U.role = 'Coach' AND U.id = D.id_user";
+        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, U.cv, U.status, U.role, D.prix, D.detail
+        FROM users U
+        LEFT JOIN details D
+        ON U.id = D.id_user
+        WHERE U.status = '0' AND U.role = 'Coach'";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
