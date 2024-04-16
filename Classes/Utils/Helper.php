@@ -31,6 +31,17 @@ class Helper
         return true;
     }
 
+    public static function validatePhone($phone)
+    {
+        $pattern = '/^[0-9 ]+$/';
+
+        if (!preg_match($pattern, $phone)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function extractUsernameFromEmail($email)
     {
         return explode('@', $email)[0];

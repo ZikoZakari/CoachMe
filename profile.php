@@ -30,7 +30,7 @@ if (isset($_POST['save-profile'])) {
     $adress = Helper::sanitizeString($adress);
     $city = Helper::sanitizeString($city);
 
-    if (Helper::validateName($fname) && Helper::validateName($lname)) {
+    if (Helper::validateName($fname) && Helper::validateName($lname) && Helper::validatePhone($phone)) {
 
       try {
 
@@ -44,7 +44,7 @@ if (isset($_POST['save-profile'])) {
 
     } else {
 
-      echo $msg = Helper::flushMessage("Veuillez saissire votre nom correctement", "alert alert-danger text-center");
+      echo $msg = Helper::flushMessage("Veuillez saissire correctement", "alert alert-danger text-center");
     }
   } else {
 
@@ -424,7 +424,7 @@ if (isset($_POST['save-detail'])) {
     </svg>
     <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
   </button>
-  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
     <li>
       <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light" aria-pressed="true">
         <svg class="bi me-2 opacity-50" width="1em" height="1em">

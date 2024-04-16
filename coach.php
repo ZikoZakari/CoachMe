@@ -19,21 +19,21 @@ $profil = $user->getCoacheById($_GET['coach']);
         <div class="row gy-4 gy-lg-0">
             <div class="col-12 col-lg-4 col-xl-3">
                 <div class="row gy-4">
-                    <div class="position-sticky sticky-lg-top pt-lg-1 col-12">
+                    <div class="pt-lg-1 col-12">
                         <div class="card widget-card shadow-sm">
                             <div class="card-header text-bg-primary">
                                 Welcome to <?= $profil->fname . ' ' . $profil->lname ?> profile
                             </div>
                             <div class="card-body">
                                 <div class="text-center mb-3">
-                                    <img src="static/<?php if ($profil->pictur != NULL) {
-                                                            echo 'uploads/img/' . $profil->pictur;
-                                                        } else {
-                                                            echo 'images/profile-img-1.jpg';
-                                                        } ?>" class="img-fluid rounded-circle" alt="Luna John" />
+                                    <img width="120px" src="static/<?php if ($profil->pictur != NULL) {
+                                                                        echo 'uploads/img/' . $profil->pictur;
+                                                                    } else {
+                                                                        echo 'images/profile-img-1.jpg';
+                                                                    } ?>" class="img-fluid rounded-circle" alt="Luna John" />
                                 </div>
                                 <h5 class="text-center mb-1"><?= $profil->fname . ' ' . $profil->lname ?></h5>
-                                <p class="text-center text-secondary mb-4">
+                                <p class="text-center text-secondary mb-3">
                                     @<?= $profil->username ?>
                                 </p>
                                 <h6 class="fw-bolder text-center mb-1">A partir de</h6>
@@ -42,8 +42,21 @@ $profil = $user->getCoacheById($_GET['coach']);
                                                                                     } else {
                                                                                         echo 'FREE';
                                                                                     } ?></h6>
-                                <div class="text-center mt-2">
-                                    <?php if ($profil->cv !== NULL){?><a class="btn btn-warning mb-1 w-100" href="static/uploads/cv/<?= $profil->cv ?>">View Cv</a><?php }?>
+                                <div class="text-center mt-4">
+                                    <a class="btn btn-success mb-1 w-100">Recuter</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card widget-card shadow-sm">
+                            <div class="card-header text-bg-primary">Contact</div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <i class="bi bi-envelope text-dark-emphasis px-2"></i> <a class="mb-1" href="mailto:<?= $profil->email ?>"> <?= $profil->email ?> </a>
+                                </div>
+                                <div class="mb-1">
+                                    <i class="bi bi-telephone text-dark-emphasis px-2"></i> <a href="tel:<?= $profil->phone ?>"> <?= $profil->phone ?></a>
                                 </div>
                             </div>
                         </div>

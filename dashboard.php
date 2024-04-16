@@ -1,6 +1,9 @@
 <?php
 include_once "core.php";
 
+use Classes\Coachs\Coach;
+use Classes\Users\User;
+
 if (empty($_SESSION)) {
     header('Location: login.php');
     exit();
@@ -10,18 +13,28 @@ if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: login.php");
     exit;
-  }
-    
+}
 
 if (($_SESSION['role'] === 'Client') || ($_SESSION['role'] === 'Coach')) {
     header('Location: profile.php');
     exit();
 }
 
-
 if (empty($_SESSION)) {
     header('Location: login.php');
     exit();
+}
+
+$coach = new Coach;
+$coachs = $coach->getAllCoache();
+var_dump($_POST);
+
+if (isset($_POST['accept'])){
+
+    extract($_POST);
+    
+    $user = new User;
+    $user->updateStatusUser($accept);
 }
 
 ?>
@@ -43,6 +56,7 @@ if (empty($_SESSION)) {
     <!-- Custom styles for this template -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
     <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
     <link href="static/css/dashboard.css" rel="stylesheet" />
 </head>
 
@@ -133,99 +147,33 @@ if (empty($_SESSION)) {
                         <h1 class="h2">Dashboard</h1>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-primary text-uppercase mb-1">
-                                                Users
-                                            </div>
-                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
-                                                $40,000
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-users fa-2x text-primary"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Annual) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)
-                                            </div>
-                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
-                                                $215,000
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-success"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tasks Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-info text-uppercase mb-1">
-                                                Tasks
-                                            </div>
-                                            <div class="row g-0 align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 fw-bold text-dark-emphasis">
-                                                        50%
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mx-2">
-                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-info"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-warning text-uppercase mb-1">
-                                                Pending Requests
-                                            </div>
-                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">18</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-warning"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <table class="hover row-border stripe" id="dashboard" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Prix</th>
+                                <th>Cv's</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($coachs as $coach) : ?>
+                                <tr>
+                                    <td><?= $coach->fname ?></td>
+                                    <td><?= $coach->lname ?></td>
+                                    <td><?= $coach->prix ?> € / Heure</td>
+                                    <td><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a></td>
+                                    <td>
+                                        <form method="POST"><button type="submit" class="btn btn-success align-content-center" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button></form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+                <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
@@ -374,7 +322,7 @@ if (empty($_SESSION)) {
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </main>
         </div>
     </div>
@@ -490,6 +438,8 @@ if (empty($_SESSION)) {
     </svg>
 
     <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
     <script src="static/js/index.js"></script>
     <script src="static/js/dashboard.js"></script>

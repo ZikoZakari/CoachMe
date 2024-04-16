@@ -106,5 +106,12 @@ class User{
         $stmt->execute([$file, $id]);
     }
 
+    public function updateStatusUser($id){
+        $sql = "UPDATE users SET status = '1' WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id]);
+    }
 
 }
