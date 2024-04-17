@@ -5,9 +5,8 @@ include_once "header.php";
 use Classes\Utils\Helper;
 use Classes\Uploads\Upload;
 use Classes\Users\User;
+use Classes\Coachs\Coach;
 
-$user = new User();
-$user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
 
 if (empty($_SESSION)) {
   header('Location: login.php');
@@ -15,9 +14,16 @@ if (empty($_SESSION)) {
 }
 
 if ($_SESSION['role'] === 'Admin') {
-    header('Location: dashboard.php');
-    exit();
+  header('Location: dashboard.php');
+  exit();
 }
+
+$user = new User();
+$user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
+
+$contact = new Coach;
+$contacts = $contact->getAllContact($_SESSION['id']); 
+$contactsAccs = $contact->getAllAcceptedContact($_SESSION['id']); 
 
 if (isset($_POST['save-profile'])) {
 
@@ -321,21 +327,45 @@ if (isset($_POST['save-detail'])) {
                       <tr>
                         <th>First name</th>
                         <th>Last name</th>
-                        <th>Numero de telephone</th>
-                        <th>Status</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
-
+                      <?php foreach ($contacts as $contact) :?>
+                        <tr>
+                          <td><?= $contact->fname ?></td>
+                          <td><?= $contact->lname ?></td>
+                          <td><?= $contact->email ?></td>
+                          <td><?= $contact->phone ?></td>
+                          <td>
+                            <button class="btn btn-success me-2">Accept</button>
+                            <button class="btn btn-danger">Decline</button>
+                          </td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                  <table class="hover row-border stripe" id="example-2" style="width:100%">
+                    <thead>
                       <tr>
-                        <td>islem</td>
-                        <td>meghnine</td>
-                        <td>0556896467</td>
-                        <td>Waiting</td>
-                        <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th></th>
                       </tr>
-                      
+                    </thead>
+                    <tbody>
+                      <?php foreach ($contactsAccs as $contactsAcc) :?>
+                        <tr>
+                          <td><?= $contactsAcc->fname ?></td>
+                          <td><?= $contactsAcc->lname ?></td>
+                          <td><?= $contactsAcc->email ?></td>
+                          <td><?= $contactsAcc->phone ?></td>
+                        </tr>
+                      <?php endforeach; ?>
                     </tbody>
                   </table>
                 </div>

@@ -11,6 +11,12 @@ $database = new DB();
 
 include_once "header.php";
 
+if(Helper::checkIfConnected())
+{
+    header('Location: profile.php');
+    exit();
+}
+
 /* App logic*/
 
 if(isset($_POST['register']))

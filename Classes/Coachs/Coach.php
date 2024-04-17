@@ -37,4 +37,36 @@ class Coach{
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
+
+    public function addCoachClient($id_coach,$id_client){
+        $sql = "INSERT INTO coach_client(id_coach,id_client) VALUES (?,?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id_coach,$id_client]);
+    }
+
+    public function getAllContact($id){
+        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach FROM users U
+        LEFT JOIN coach_client C
+        ON U.id = C.id_client
+        WHERE C.id_coach = ? AND C.status = '0'";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function getAllAcceptedContact($id){
+        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach FROM users U
+        LEFT JOIN coach_client C
+        ON U.id = C.id_client
+        WHERE C.id_coach = ? AND C.status = '1'";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
 }
