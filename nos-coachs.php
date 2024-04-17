@@ -6,7 +6,6 @@ use Classes\Utils\Helper;
 
 $coaches = new Coach();
 $coachs = $coaches->coaches();
-// var_dump($coach);
 
 include_once "header.php";
 ?>
@@ -37,17 +36,17 @@ include_once "header.php";
             <div class="col mb-5">
                 <div class="card h-100 rounded-5 shadow-lg">
                     <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (5)</div>
-                    <img class="card-img-top rounded-top-5" src="./static/images/profile-img-1.jpg" alt="..." />
+                    <img class="card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) { echo 'uploads/img/'.$coach->pictur; }else{ echo 'images/profile-img-1.jpg'; } ?>" alt="..." />
                     <div class="card-body mt-3">
                         <div class="text-center">
-                            <h5 class="fw-bolder"><?php echo $coach->fname.' '.$coach->lname; ?></h5>
-                            Enseignant de kundalin yoga à domicile sur lille sa région
+                            <h5 class="fw-bolder"><?= $coach->fname.' '.$coach->lname ?></h5>
+                            Enseignant de kundalin yoga à domicile sur lille sa région <!--<?= $coach->job ?> -->
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-black-50 rounded-5">
                         <div class="text-center mt-2">
                             <h6 class="fw-bolder">A partir de</h6>
-                            <h6 class="fw-bolder text-success">35.99€ / heure</h6>
+                            <h6 class="fw-bolder text-success"><?php if ($coach->prix != NULL){ echo $coach->prix.'€ / heure'; }else{ echo 'FREE'; } ?></h6>
                         </div>
                         <span class="badge text-bg-primary">HTML</span>
                         <span class="badge text-bg-primary">SCSS</span>
@@ -57,7 +56,7 @@ include_once "header.php";
                         <span class="badge text-bg-primary">Angular</span>
                         <span class="badge text-bg-primary">UI</span>
                         <span class="badge text-bg-primary">UX</span>
-                        <!-- <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View profile</a></div> -->
+                        <div class="text-center mt-3"><a class="btn btn-outline-dark mt-auto" href="coach.php?coach=<?= $coach->id ?>">View profile</a></div>
                     </div>
                 </div>
             </div>

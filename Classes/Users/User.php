@@ -41,4 +41,91 @@ class User{
         $stmt->execute([$fname,$lname,$address,$city,$gender,$role,$email,$username,$password]);
     }
 
+    public function add_details($id_user)
+    {
+        $sql = "INSERT INTO details(id_user) VALUES (?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id_user]);
+    }
+
+    public function last_user(){
+        $sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function details($prix,$detail,$id_user)
+    {
+        $sql = "UPDATE details SET prix = ?, detail = ? WHERE id_user = ? ";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$prix,$detail,$id_user]);
+    }
+
+    public function get_user_info($id,$role){
+        if($role == 'Coach'){
+            $sql = "SELECT * FROM users U, details D WHERE U.id = D.id_user AND U.id = ?";
+        }
+        if($role == 'Client'){
+            $sql = "SELECT * FROM users U WHERE U.id = ?";
+        }
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function get_user_pic($id){
+        $sql = "SELECT pictur FROM users WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $id){
+        $sql = "UPDATE users SET fname = ?, lname = ?, about = ?, address = ?, city = ?, phone = ?, job = ? WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$fname, $lname, $about, $adress, $city, $phone, $job, $id]);
+    }
+
+    public function updateFile($file, $id, $type){
+        if ($type == 'img'){
+            $sql = "UPDATE users SET pictur = ? WHERE id = ? ";
+        }
+        if ($type == 'cv'){
+            $sql = "UPDATE users SET cv = ? WHERE id = ? ";
+        }
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$file, $id]);
+    }
+
+    public function updateStatusUser($id){
+        $sql = "UPDATE users SET status = '1' WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id]);
+    }
+
+    public function getAllUsers(){
+        $sql = "SELECT fname, lname, email, cv, role, status FROM users WHERE role != 'Admin'";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
 }

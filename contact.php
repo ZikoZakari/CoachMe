@@ -1,8 +1,66 @@
-<?php 
+<?php
 include_once "core.php";
+include_once "header.php";
 
-/* header */
-include_once "header.php";?>
+use Classes\Utils\Helper;
+use Classes\Newsletter\Newslatter;
+use Classes\Contacts\Contact;
+
+if (isset($_POST['submit'])){
+    
+    extract($_POST);
+
+    if(!empty($fullname) && !empty($email) && !empty($subject) && !empty($message)){
+
+        $fullname = Helper::sanitizeString($fullname);
+        $subject = Helper::sanitizeString($subject);
+        $message = Helper::sanitizeString($message);
+
+        if(Helper::validateEmail($email) && Helper::validateName($fullname)){
+            try{
+                $contact = new Contact();
+                $contact->sendMessage($fullname,$email,$phone,$subject,$message);
+                $msg = Helper::flushMessage("Votre message a été envoyer avec succès","alert alert-success text-center");
+            }
+            catch(Exception $e)
+            {
+                $msg = Helper::flushMessage("Une erreur est survenue","alert alert-danger text-center");
+            }
+        }
+
+    }else{
+        $msg = Helper::flushMessage("Veuillez saisir tous les champs en *","alert alert-danger text-center");
+    }
+}
+
+if(isset($_POST['nl-sub']))
+{
+    extract($_POST);
+    if(!empty($nlEmail))
+    {
+        if(Helper::validateEmail($nlEmail))
+        {
+            // get ip
+            $ip = $_SERVER['REMOTE_ADDR'];
+
+            try{
+                $newslatter = new Newslatter();
+                $newslatter->add($nlEmail,$ip);
+                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès","alert alert-success text-center");
+            }
+            catch(Exception $e)
+            {
+                $nlMsg = Helper::flushMessage("Erreur de l'abonnement","alert alert-danger text-center");
+            }
+            
+        }
+        else
+        {
+            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement","alert alert-danger text-center");
+        }
+    }
+}
+?>
 
 <!-- Contact  -->
 <section class=" py-3 py-md-5">
@@ -33,7 +91,8 @@ include_once "header.php";?>
                 <div class="row justify-content-xl-center">
                     <div class="col-12 col-xl-11">
                         <div class=" border rounded shadow-sm overflow-hidden">
-                            <form action="#!">
+                            <form method="POST" enctype="multipart/form-data">
+                            <?= isset($msg) ? $msg : '';?>
                                 <div class="row gy-4 gy-xl-5 p-4 p-xl-5">
                                     <div class="col-12">
                                         <label for="fullname" class="form-label">Votre nom <span
@@ -83,7 +142,7 @@ include_once "header.php";?>
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button class="btn btn-primary btn-lg" type="submit">
+                                            <button type="submit" class="btn btn-primary btn-lg"  name="submit" id="submit">
                                                 Envoyer
                                             </button>
                                         </div>

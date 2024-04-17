@@ -1,18 +1,59 @@
 <?php
 include_once "core.php";
 
+use Classes\Coachs\Coach;
+use Classes\Newsletter\Newslatter;
+use Classes\Users\User;
+use Classes\Contacts\Contact;
+
 if (empty($_SESSION)) {
     header('Location: login.php');
     exit();
 }
 
-    
-//*** decoment affter ending all modif ***//
-// if (($_SESSION['role'] === 'Client') || ($_SESSION['role'] === 'Coach')) {
-//     header('Location: profile.php');
-//     exit();
-// }
-//***                                   ***/
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+if (($_SESSION['role'] === 'Client') || ($_SESSION['role'] === 'Coach')) {
+    header('Location: profile.php');
+    exit();
+}
+
+if (empty($_SESSION)) {
+    header('Location: login.php');
+    exit();
+}
+
+$coach = new Coach;
+$coachs = $coach->getAllCoache();
+
+$user = new User;
+$users = $user->getAllUsers();
+
+$contact = new Contact;
+$contacts = $contact->getAllMessages();
+
+$newslatter = new Newslatter;
+$newslatters = $newslatter->get();
+
+if (isset($_POST['accept'])) {
+
+    extract($_POST);
+
+    $profil = new User;
+    $profil->updateStatusUser($accept);
+}
+
+if (isset($_POST['message'])) {
+
+    extract($_POST);
+
+    $profil = new User;
+    // $profil->messageToUser($message);
+}
 
 ?>
 <!DOCTYPE html>
@@ -33,6 +74,7 @@ if (empty($_SESSION)) {
     <!-- Custom styles for this template -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet" />
     <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
     <link href="static/css/dashboard.css" rel="stylesheet" />
 </head>
 
@@ -104,15 +146,7 @@ if (empty($_SESSION)) {
                         <hr class="my-3" />
                         <ul class="nav flex-column mb-auto">
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#gear-wide-connected" />
-                                    </svg>
-                                    Settings
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="dashboard.php?logout=1">
                                     <svg class="bi">
                                         <use xlink:href="#door-closed" />
                                     </svg>
@@ -124,106 +158,115 @@ if (empty($_SESSION)) {
                 </div>
             </div>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="container-fluid py-3">
+            <main class="tab-content col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="container-fluid py-3" >
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h2">Dashboard</h1>
                     </div>
 
-                    <div class="row">
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-primary text-uppercase mb-1">
-                                                Users
-                                            </div>
-                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
-                                                $40,000
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-users fa-2x text-primary"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <table class="hover row-border stripe" id="dashboard" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Prix</th>
+                                <th>Cv's</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($coachs as $coach) : ?>
+                                <tr>
+                                    <td><?= $coach->fname ?></td>
+                                    <td><?= $coach->lname ?></td>
+                                    <td><?= $coach->prix ?> € / Heure</td>
+                                    <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else { echo "Pas de cv"; } ?></td>
+                                    <td>
+                                        <form method="POST" class="d-flex justify-content-center">
+                                            <button type="message" class="btn btn-danger w-100 me-1" id="message" name="message" value="<?= $coach->id ?>">Message</button>    
+                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
-                        <!-- Earnings (Annual) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)
-                                            </div>
-                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
-                                                $215,000
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-success"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tasks Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-info text-uppercase mb-1">
-                                                Tasks
-                                            </div>
-                                            <div class="row g-0 align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 fw-bold text-dark-emphasis">
-                                                        50%
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mx-2">
-                                                        <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-info"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-0 border-start border-5 border-warning shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row g-0 align-items-center">
-                                        <div class="col me-2">
-                                            <div class="fs-6 fw-bold text-warning text-uppercase mb-1">
-                                                Pending Requests
-                                            </div>
-                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">18</div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-warning"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h2">All Clients</h1>
                     </div>
+
+                    <table class="hover row-border stripe" id="users" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($users as $user) :
+                                if ( $user->role == 'Client'){ ?>
+                                <tr>
+                                    <td><?= $user->fname ?></td>
+                                    <td><?= $user->lname ?></td>
+                                    <td><?= $user->email ?></td>
+                                </tr>
+                            <?php } endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h2">Contact</h1>
+                    </div>
+
+                    <table class="hover row-border stripe" id="contacts" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th></th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($contacts as $contact) : ?>
+                                <tr>
+                                    <td><?= $contact->name ?></td>
+                                    <td><?= $contact->email ?></td>
+                                    <td>test</td>
+                                    <td><?= $contact->subject ?></td>
+                                    <td><?= $contact->message ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                        <h1 class="h2">Newslatters</h1>
+                    </div>
+
+                    <table class="hover row-border stripe" id="newslatters" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($newslatters as $newslatter) : ?>
+                                <tr>
+                                    <td><?= $newslatter->email ?></td>
+                                    <td><?= $newslatter->ip ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group me-2">
@@ -372,7 +415,7 @@ if (empty($_SESSION)) {
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </main>
         </div>
     </div>
@@ -488,6 +531,8 @@ if (empty($_SESSION)) {
     </svg>
 
     <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script>
     <script src="static/js/index.js"></script>
     <script src="static/js/dashboard.js"></script>

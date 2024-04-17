@@ -2,17 +2,97 @@
 include_once "core.php";
 include_once "header.php";
 
+use Classes\Utils\Helper;
+use Classes\Uploads\Upload;
+use Classes\Users\User;
+
+$user = new User();
+$user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
+
 if (empty($_SESSION)) {
   header('Location: login.php');
   exit();
 }
 
-//*** decoment affter ending all modif ***//
-// if (($_SESSION['role'] === 'Admin') {
-//     header('Location: dashboard.php');
-//     exit();
-// }
-//***                                   ***/
+if ($_SESSION['role'] === 'Admin') {
+    header('Location: dashboard.php');
+    exit();
+}
+
+if (isset($_POST['save-profile'])) {
+
+  if (!empty($_POST["fname"]) && !empty($_POST["lname"]) && !empty($_POST["about"]) && !empty($_POST["adress"]) && !empty($_POST["city"]) && !empty($_POST["phone"]) && !empty($_POST["job"])) {
+
+    extract($_POST);
+
+    $fname = Helper::sanitizeString($fname);
+    $lname = Helper::sanitizeString($lname);
+    $adress = Helper::sanitizeString($adress);
+    $city = Helper::sanitizeString($city);
+
+    if (Helper::validateName($fname) && Helper::validateName($lname) && Helper::validatePhone($phone)) {
+
+      try {
+
+        $profil = new User();
+        $profil->updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $_SESSION['id']);
+        echo $msg = Helper::flushMessage("Modifier avec succès", "alert alert-success text-center");
+      } catch (Exception $e) {
+
+        echo $msg = Helper::flushMessage("Compte existe déja", "alert alert-danger text-center");
+      }
+
+    } else {
+
+      echo $msg = Helper::flushMessage("Veuillez saissire correctement", "alert alert-danger text-center");
+    }
+  } else {
+
+    echo $msg = Helper::flushMessage("Veuillez remplire tous les champs necessaire", "alert alert-danger text-center");
+  }
+}
+
+if (!empty($_FILES['pictur'])) {
+
+  if (Helper::imgCheck($_FILES['pictur'])) {
+
+    $file = new Upload;
+    $updateImg = new User;
+    $img = $file->imgUpload($_FILES['pictur']);
+    $updateImg->updateFile($img, $_SESSION['id'], 'img');
+    echo $msg = Helper::flushMessage("Done", "alert alert-success text-center");
+  } else {
+
+    echo $msg = Helper::flushMessage("error image", "alert alert-danger text-center");
+  }
+}
+
+if (!empty($_FILES['cv'])) {
+
+  if (Helper::fileCheck($_FILES['cv'])) {
+
+    $file = new Upload;
+    $updateFile = new User;
+    $cv = $file->fileUpload($_FILES['cv']);
+    $updateFile->updateFile($cv, $_SESSION['id'], 'cv');
+    echo $msg = Helper::flushMessage("Cv telecharger avec succès", "alert alert-success text-center");
+  } else {
+
+    echo $msg = Helper::flushMessage("error Cv", "alert alert-danger text-center");
+  }
+}
+
+if (isset($_POST['save-detail'])) {
+
+  if (!empty($_POST["price"]) && !empty($_POST["detail"])) {
+
+    extract($_POST);
+
+    $detail = new User();
+    $detail->details($price, $_POST['detail'], $_SESSION['id']);
+  }
+}
+
 ?>
 
 <section class="py-3 py-md-5 py-xl-8">
@@ -23,25 +103,39 @@ if (empty($_SESSION)) {
           <div class=" pt-lg-1 col-12">
             <div class="card widget-card shadow-sm">
               <div class="card-header text-bg-primary">
-                Welcome, Ethan Leo
+                Welcome, <?= $user->fname . ' ' . $user->lname ?>
               </div>
               <div class="card-body">
                 <div class="text-center mb-3">
-                  <img width="120px" src="./static/images/profile-img-1.jpg" class="img-fluid rounded-circle" alt="Luna John" />
+                  <img width="120px" src="./static/<?php if ($user->pictur != NULL) {
+                                                      echo 'uploads/img/' . $user->pictur;
+                                                    } else {
+                                                      echo 'images/profile-img-1.jpg';
+                                                    } ?>" class="img-fluid rounded-circle" />
                 </div>
-                <h5 class="text-center mb-1">Ethan Leo</h5>
+                <h5 class="text-center mb-1"><?= $user->fname . ' ' . $user->lname ?></h5>
                 <p class="text-center text-secondary mb-4">
-                  @Coach
+                  @<?= $user->username ?>
                 </p>
-                <div class="text-center mb-4">
-                  <button class="btn btn-outline-danger" type="button">
-                    <i class="bi bi-box-arrow-left"></i>
-                  </button>
-                  <button class="btn btn-primary" type="button">
-                    <i class="bi bi-house-door-fill"></i> Home
-                  </button>
+                <div class="text-center mb-3">
+                  <form method="POST" enctype="multipart/form-data">
+                    <!-- <a class="btn btn-outline-danger" href="?logout=1">
+                      <i class="bi bi-box-arrow-left"></i>
+                    </a> -->
+                    <input type="file" id="pictur" name="pictur" hidden onchange="this.form.submit()" />
+                    <label for="pictur" class="btn btn-primary w-100">Nouvelle image</label>
+                  </form>
                 </div>
-                <ul class="list-group list-group-flush">
+                <?php if ($_SESSION['role'] == 'Coach'){ ?>
+                <div class="text-center">
+                  <form method="POST" enctype="multipart/form-data">
+                    <input type="file" id="cv" name="cv" hidden onchange="this.form.submit()" />
+                    <label for="cv" class="btn btn-warning w-100">Deposer votre CV ici</label>
+                  </form>
+                </div>
+                <?php } ?>
+                
+                <!-- <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex justify-content-between align-items-center">
                     <h6 class="m-0">Followers</h6>
                     <span>7,854</span>
@@ -54,10 +148,11 @@ if (empty($_SESSION)) {
                     <h6 class="m-0">Friends</h6>
                     <span>4,620</span>
                   </li>
-                </ul>
+                </ul> -->
               </div>
             </div>
           </div>
+          <?php if ($_SESSION['role'] == 'Coach'){ ?>
           <div class="col-12">
             <div class="card widget-card shadow-sm">
               <div class="card-header text-bg-primary">Skills</div>
@@ -73,6 +168,7 @@ if (empty($_SESSION)) {
               </div>
             </div>
           </div>
+          <?php } ?>
         </div>
       </div>
       <div class="col-12 col-lg-8 col-xl-9">
@@ -89,6 +185,7 @@ if (empty($_SESSION)) {
                   Profile
                 </button>
               </li>
+              <?php if ($_SESSION['role'] == 'Coach'){ ?>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab-pane" type="button" role="tab" aria-controls="detail-tab-pane" aria-selected="false">
                   Details
@@ -99,6 +196,7 @@ if (empty($_SESSION)) {
                   Contact
                 </button>
               </li>
+              <?php } ?>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">
                   Mot de passe
@@ -109,12 +207,7 @@ if (empty($_SESSION)) {
               <div class="tab-pane fade show active" id="overview-tab-pane" role="tabpanel" aria-labelledby="overview-tab" tabindex="0">
                 <h5 class="mb-3">About</h5>
                 <p class="lead mb-3">
-                  Ethan Leo is a seasoned and results-driven Project Manager
-                  who brings experience and expertise to project management.
-                  With a proven track record of successfully delivering
-                  complex projects on time and within budget, Ethan Leo is
-                  the go-to professional for organizations seeking efficient
-                  and effective project leadership.
+                  <?= $user->about ?>
                 </p>
                 <h5 class="mb-3">Profile</h5>
                 <div class="row g-0">
@@ -122,71 +215,71 @@ if (empty($_SESSION)) {
                     <div class="p-2">First Name</div>
                   </div>
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
-                    <div class="p-2">Ethan</div>
+                    <div class="p-2"><?= $user->fname ?></div>
                   </div>
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Last Name</div>
                   </div>
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
-                    <div class="p-2">Leo</div>
+                    <div class="p-2"><?= $user->lname ?></div>
                   </div>
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Job</div>
                   </div>
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
-                    <div class="p-2">Project Manager</div>
+                    <div class="p-2"><?= $user->job ?></div>
                   </div>
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Phone</div>
                   </div>
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
-                    <div class="p-2">+1 (248) 679-8745</div>
+                    <div class="p-2"><?= $user->phone ?></div>
                   </div>
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Email</div>
                   </div>
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
-                    <div class="p-2">leo@example.com</div>
+                    <div class="p-2"><?= $user->email ?></div>
                   </div>
                 </div>
               </div>
               <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                <form action="#!" class="row gy-3 gy-xxl-4">
+                <form method="POST" class="row gy-3 gy-xxl-4" enctype="multipart/form-data">
                   <div class="col-12 col-md-4">
-                    <label for="inputFirstName" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="inputFirstName" value="Ethan" />
+                    <label for="fname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="fname" name="fname" value="<?= $user->fname ?>" />
                   </div>
                   <div class="col-12 col-md-4">
-                    <label for="inputLastName" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="inputLastName" value="Leo" />
+                    <label for="lname" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lname" name="lname" value="<?= $user->lname ?>" />
                   </div>
                   <div class="col-12 col-md-4">
-                    <label for="inputUsername" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="inputUsername" value="Ethan123" disabled/>
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" value="<?= $user->username ?>" disabled />
                   </div>
                   <div class="col-12">
-                    <label for="inputAbout" class="form-label">About</label>
-                    <textarea class="form-control" rows="5" id="inputAbout">Ethan Leo is a seasoned and results-driven Project Manager who brings experience and expertise to project management. With a proven track record of successfully delivering complex projects on time and within budget, Ethan Leo is the go-to professional for organizations seeking efficient and effective project leadership.</textarea>
+                    <label for="about" class="form-label">About</label>
+                    <textarea class="form-control" rows="5" id="about" name="about"><?= $user->about ?></textarea>
                   </div>
                   <div class="col-12 col-md-6">
-                    <label for="inputAdress" class="form-label">Adress</label>
-                    <input type="text" class="form-control" id="inputAdress" value="" />
+                    <label for="adress" class="form-label">Adress</label>
+                    <input type="text" class="form-control" id="adress" name="adress" value="<?= $user->address ?>" />
                   </div>
                   <div class="col-12 col-md-6">
-                    <label for="inputCity" class="form-label">City</label>
-                    <input type="text" class="form-control" id="inputCity" value="" />
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city" value="<?= $user->city ?>" />
                   </div>
                   <div class="col-12 col-md-6">
-                    <label for="inputPhone" class="form-label">Phone</label>
-                    <input type="tel" class="form-control" id="inputPhone" value="+12486798745" />
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" value="<?= $user->phone ?>" />
                   </div>
                   <div class="col-12 col-md-6">
-                    <label for="inputEmail" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="inputEmail" value="leo@example.com" />
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="<?= $user->email ?>" disabled />
                   </div>
                   <div class="col-12 col-md-6">
-                    <label for="inputSkills" class="form-label">Skills</label>
-                    <select class="form-select" id="multiple-select-custom-field" data-placeholder="Choose anything" multiple>
+                    <label for="skill" class="form-label">Skills</label>
+                    <select class="form-select" id="skill" data-placeholder="Choose anything" name="skill" multiple>
                       <option>Christmas Island</option>
                       <option>South Sudan</option>
                       <option>Jamaica</option>
@@ -210,66 +303,68 @@ if (empty($_SESSION)) {
                     </select>
                   </div>
                   <div class="col-12 col-md-6">
-                    <label for="inputJob" class="form-label">Job</label>
-                    <input type="text" class="form-control" id="inputJob" value="Project Manager" />
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <label for="inputPictur" class="form-label">Photo de profile</label>
-                    <div class="input-group">
-                      <input type="file" class="form-control" id="inputPictur">
-                      <span class="input-group-text" id="inputPictur"><i class="bi bi-person-square"></i></span>
-                    </div>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <label for="inputCv" class="form-label">Votre CV</label>
-                    <div class="input-group">
-                      <input type="file" class="form-control" id="inputCv">
-                      <span class="input-group-text" id="inputCv"><i class="bi bi-paperclip"></i></span>
-                    </div>
+                    <label for="job" class="form-label">Job</label>
+                    <input type="text" class="form-control" id="job" name="job" value="<?= $user->job ?>" />
                   </div>
                   <div class="col-12">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" name="save-profile" id="save-profile">
                       Save Changes
                     </button>
                   </div>
                 </form>
               </div>
-
+              <?php if ($_SESSION['role'] == 'Coach'){ ?>
               <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
-                <form action="#!">
-                  <fieldset class="row gy-3 gy-md-0">
-                    
-                  </fieldset>
-                </form>
+                <div class="row gy-3 gy-md-0">
+                  <table class="hover row-border stripe" id="example" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Numero de telephone</th>
+                        <th>Status</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <tr>
+                        <td>islem</td>
+                        <td>meghnine</td>
+                        <td>0556896467</td>
+                        <td>Waiting</td>
+                        <td><button class="btn btn-success me-2">Accept</button><button class="btn btn-danger">Decline</button></td>
+                      </tr>
+                      
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div class="tab-pane fade" id="detail-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
-                <form action="#!">
-                  <fieldset class="row gy-3 gy-md-0">
-                    <div class="col-12 col-md-12 mb-3">
-                      <label for="inputPrice" class="form-label">Prix de base</label>
-                      <div class="input-group">
-                        <span class="input-group-text">€</span>
-                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                        <span class="input-group-text">.00</span>
-                      </div>
+                <form method="POST" class="row gy-3 gy-md-0" enctype="multipart/form-data">
+                  <div class="col-12 col-md-12 mb-3">
+                    <label for="price" class="form-label">Prix de base</label>
+                    <div class="input-group">
+                      <span class="input-group-text">€</span>
+                      <input type="text" class="form-control" id="price" name="price" value="<?= $user->prix ?>">
+                      <span class="input-group-text">.00</span>
                     </div>
-                    <div class="col-12 col-md-12">
-                      <textarea id="imputDetail"> text area </textarea>
-                    </div>
-                  </fieldset>
+                  </div>
+                  <div class="col-12 col-md-12">
+                    <label for="detail" class="form-label">Description de votre offre</label>
+                    <textarea id="detail" name="detail"><?= $user->detail ?></textarea>
+                  </div>
                   <div class="row">
                     <div class="col-12">
-                      <button type="submit" class="btn btn-primary mt-4">
+                      <button type="submit" class="btn btn-primary mt-4" name="save-detail">
                         Save Changes
                       </button>
                     </div>
                   </div>
                 </form>
               </div>
-
-
-
+              <?php } ?>
               <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
                 <form action="#!">
                   <div class="row gy-3 gy-xxl-4">
@@ -308,7 +403,7 @@ if (empty($_SESSION)) {
     </svg>
     <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
   </button>
-  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
     <li>
       <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light" aria-pressed="true">
         <svg class="bi me-2 opacity-50" width="1em" height="1em">
