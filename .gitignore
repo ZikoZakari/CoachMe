@@ -1,4 +1,5 @@
 vendor/
 .env
 composer.lock
-uploads/*
+static/uploads/cv/*
+static/uploads/img/*
