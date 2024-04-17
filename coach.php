@@ -3,13 +3,30 @@ include_once "core.php";
 include_once "header.php";
 
 use Classes\Coachs\Coach;
+use Classes\Utils\Helper;
 
 if (empty($_GET)) {
     header('Location: nos-coachs.php');
     exit();
 }
+
 $user = new Coach;
 $profil = $user->getCoacheById($_GET['coach']);
+
+if (isset($_POST['submit'])) {
+
+    if (HELPER::checkIfExist($_GET['coach'],$_POST['submit'])){
+        try{
+            $add = new Coach;
+            $add->addCoachClient($_GET['coach'],$_POST['submit']);
+            $msg = Helper::flushMessage('DONE','alert alert-success text-center');
+        } catch (Exception $e) {
+            $msg = Helper::flushMessage('ERREUR','alert alert-danger text-center');
+        }
+    }else{
+        $msg = Helper::flushMessage('Existe deja','alert alert-danger text-center');
+    }
+}
 
 ?>
 
@@ -37,13 +54,16 @@ $profil = $user->getCoacheById($_GET['coach']);
                                     @<?= $profil->username ?>
                                 </p>
                                 <h6 class="fw-bolder text-center mb-1">A partir de</h6>
-                                <h6 class="fw-bolder text-success text-center mb-1"><?php if ($profil->prix != NULL) {
+                                <h6 class="fw-bolder text-success text-center mb-4"><?php if ($profil->prix != NULL) {
                                                                                         echo $profil->prix . '€ / heure';
                                                                                     } else {
                                                                                         echo 'FREE';
                                                                                     } ?></h6>
-                                <div class="text-center mt-4">
-                                    <a class="btn btn-success mb-1 w-100">Recuter</a>
+                                <?= isset($msg) ? $msg : '' ;?>
+                                <div class="text-center">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-success mb-1 w-100" id="submit" name="submit" value="<?= $_SESSION['id'] ?>">Recuter</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

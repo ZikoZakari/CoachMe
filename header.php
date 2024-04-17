@@ -36,7 +36,7 @@ if (!empty($_SESSION)) {
   <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3">
       <div class="col-md-3 mb-2 mb-md-0">
-        <a href="/" class="d-inline-flex fs-4 link-body-emphasis text-decoration-none" aria-current="page">
+        <a href="index.php" class="d-inline-flex fs-4 link-body-emphasis text-decoration-none" aria-current="page">
           Coach<span class="">Me</span>
         </a>
       </div>

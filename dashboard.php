@@ -39,6 +39,8 @@ $contacts = $contact->getAllMessages();
 $newslatter = new Newslatter;
 $newslatters = $newslatter->get();
 
+// var_dump($_POST);
+
 if (isset($_POST['accept'])) {
 
     extract($_POST);
@@ -51,7 +53,7 @@ if (isset($_POST['message'])) {
 
     extract($_POST);
 
-    $profil = new User;
+    // $profil = new User;
     // $profil->messageToUser($message);
 }
 
@@ -115,29 +117,25 @@ if (isset($_POST['message'])) {
                     <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#dashboard">
                                     <i class="bi bi-house-fill"></i>
                                     Dashboard
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="#user">
+                                    <i class="bi bi-people"></i>
+                                    Users
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center gap-2" href="#contact">
                                     <i class="bi bi-chat-left-text"></i> Contacts
                                 </a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <i class="fa-solid fa-person-running"></i> Coachs
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <i class="bi bi-people"></i>
-                                    Clients
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                                <a class="nav-link d-flex align-items-center gap-2" href="#newslatter">
                                     <i class="bi bi-envelope-at"></i> Newsletter
                                 </a>
                             </li>
@@ -159,13 +157,13 @@ if (isset($_POST['message'])) {
             </div>
 
             <main class="tab-content col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="container-fluid py-3" >
+                <div class="container-fluid py-3">
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">
                         <h1 class="h2">Dashboard</h1>
                     </div>
 
-                    <table class="hover row-border stripe" id="dashboard" style="width:100%">
+                    <table class="hover row-border stripe" id="dashboards" style="width:100%">
                         <thead>
                             <tr>
                                 <th>First Name</th>
@@ -181,10 +179,12 @@ if (isset($_POST['message'])) {
                                     <td><?= $coach->fname ?></td>
                                     <td><?= $coach->lname ?></td>
                                     <td><?= $coach->prix ?> € / Heure</td>
-                                    <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else { echo "Pas de cv"; } ?></td>
+                                    <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else {
+                                                                                                                                                                                            echo "Pas de cv";
+                                                                                                                                                                                        } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
-                                            <button type="message" class="btn btn-danger w-100 me-1" id="message" name="message" value="<?= $coach->id ?>">Message</button>    
+                                            <button type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal">Message</button>
                                             <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
                                         </form>
                                     </td>
@@ -193,8 +193,32 @@ if (isset($_POST['message'])) {
                         </tbody>
                     </table>
 
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-                        <h1 class="h2">All Clients</h1>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method="POST" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="recipient-name" class="col-form-label">Titre</label>
+                                            <input type="text" class="form-control" id="recipient-name" name="recipient-name">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="message-text" class="col-form-label">Message</label>
+                                            <textarea class="form-control" id="message-text" name="message-text"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary" id="submit" name="submit" value="<?= $coach->fname ?>">Send</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
+                        <h1 class="h2">All Users</h1>
                     </div>
 
                     <table class="hover row-border stripe" id="users" style="width:100%">
@@ -203,21 +227,22 @@ if (isset($_POST['message'])) {
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>Email</th>
+                                <th>Role</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($users as $user) :
-                                if ( $user->role == 'Client'){ ?>
+                            <?php foreach ($users as $user) : ?>
                                 <tr>
                                     <td><?= $user->fname ?></td>
                                     <td><?= $user->lname ?></td>
                                     <td><?= $user->email ?></td>
+                                    <td><?= $user->role ?></td>
                                 </tr>
-                            <?php } endforeach; ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
 
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="contact">
                         <h1 class="h2">Contact</h1>
                     </div>
 
@@ -227,8 +252,8 @@ if (isset($_POST['message'])) {
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <th></th>
-                                <th>Phone</th>
+                                <th>Subject</th>
+                                <th>Message</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -245,26 +270,26 @@ if (isset($_POST['message'])) {
                     </table>
                 </div>
 
-                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4">
-                        <h1 class="h2">Newslatters</h1>
-                    </div>
+                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="newslatter">
+                    <h1 class="h2">Newslatters</h1>
+                </div>
 
-                    <table class="hover row-border stripe" id="newslatters" style="width:100%">
-                        <thead>
+                <table class="hover row-border stripe" id="newslatters" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>IP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($newslatters as $newslatter) : ?>
                             <tr>
-                                <th>Email</th>
-                                <th>IP</th>
+                                <td><?= $newslatter->email ?></td>
+                                <td><?= $newslatter->ip ?></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($newslatters as $newslatter) : ?>
-                                <tr>
-                                    <td><?= $newslatter->email ?></td>
-                                    <td><?= $newslatter->ip ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
 
                 <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>
@@ -419,6 +444,8 @@ if (isset($_POST['message'])) {
             </main>
         </div>
     </div>
+
+
 
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
         <symbol id="check2" viewBox="0 0 16 16">

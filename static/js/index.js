@@ -13,3 +13,4 @@ var textareaIds = ['detail'];
     });
 
 new DataTable('#example');
+new DataTable('#example-2');
