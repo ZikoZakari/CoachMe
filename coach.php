@@ -15,16 +15,21 @@ $profil = $user->getCoacheById($_GET['coach']);
 
 if (isset($_POST['submit'])) {
 
-    if (HELPER::checkIfExist($_GET['coach'],$_POST['submit'])){
-        try{
-            $add = new Coach;
-            $add->addCoachClient($_GET['coach'],$_POST['submit']);
-            $msg = Helper::flushMessage('DONE','alert alert-success text-center');
-        } catch (Exception $e) {
-            $msg = Helper::flushMessage('ERREUR','alert alert-danger text-center');
+    if ($_SESSION['role'] == 'Client') {
+
+        if (HELPER::checkIfExist($_GET['coach'], $_POST['submit'])) {
+            try {
+                $add = new Coach;
+                $add->addCoachClient($_GET['coach'], $_POST['submit']);
+                $msg = Helper::flushMessage('DONE', 'alert alert-success text-center');
+            } catch (Exception $e) {
+                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
+            }
+        } else {
+            $msg = Helper::flushMessage('Existe deja', 'alert alert-danger text-center');
         }
-    }else{
-        $msg = Helper::flushMessage('Existe deja','alert alert-danger text-center');
+    } else {
+        $msg = Helper::flushMessage('Il est impossible de vous inscription aux tant que coach', 'alert alert-danger text-center');
     }
 }
 
@@ -59,7 +64,7 @@ if (isset($_POST['submit'])) {
                                                                                     } else {
                                                                                         echo 'FREE';
                                                                                     } ?></h6>
-                                <?= isset($msg) ? $msg : '' ;?>
+                                <?= isset($msg) ? $msg : ''; ?>
                                 <div class="text-center">
                                     <form method="POST" enctype="multipart/form-data">
                                         <button type="submit" class="btn btn-success mb-1 w-100" id="submit" name="submit" value="<?= $_SESSION['id'] ?>">Recuter</button>

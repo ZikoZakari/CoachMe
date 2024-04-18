@@ -161,4 +161,26 @@ class Helper
             return true;
         return false;
     }
+
+    public static function checkIfLinkExist($table,$id){
+
+        $db = (new Db())->getConnection();
+
+        if ($table = 1){
+            $sql = "SELECT id FROM details WHERE id_user = ?";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$id]);
+        }
+        if ($table = 2){
+            $sql = "SELECT id FROM coach_client WHERE (id_coach = ? OR id_client = ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$id,$id]);
+        }
+
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return false;
+        return true;
+    }
 }

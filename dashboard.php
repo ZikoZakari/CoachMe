@@ -5,6 +5,7 @@ use Classes\Coachs\Coach;
 use Classes\Newsletter\Newslatter;
 use Classes\Users\User;
 use Classes\Contacts\Contact;
+use Classes\Utils\Helper;
 
 if (empty($_SESSION)) {
     header('Location: login.php');
@@ -49,12 +50,52 @@ if (isset($_POST['accept'])) {
     $profil->updateStatusUser($accept);
 }
 
-if (isset($_POST['message'])) {
+if (isset($_POST['userId'])) {
 
     extract($_POST);
 
-    // $profil = new User;
-    // $profil->messageToUser($message);
+    try {
+        $delete = new User;
+
+        if (Helper::checkIfLinkExist(1, $userId)) {
+
+            $delete->deleteUserLinkDetails($userId);
+
+        }
+
+        if (Helper::checkIfLinkExist(2, $userId)) {
+
+            $delete->deleteUserLinkCoach_client($userId);
+
+        }
+
+        $delete->deleteUser($userId);
+
+        $msgDeleteUser =  Helper::flushMessage('User delete', 'alert alert-success text-center');
+
+    } catch (Exception $e) {
+
+        $msgDeleteUser = Helper::flushMessage('User cannot be deleted', 'alert alert-danger text-center');
+
+    }
+}
+
+if (isset($_POST['messagId'])) {
+
+    extract($_POST);
+
+    try {
+        $delete = new Contact;
+
+        $delete->deleteContactMessag($messagId);
+
+        $msgDeleteContact =  Helper::flushMessage('Message deleted', 'alert alert-success text-center');
+
+    } catch (Exception $e) {
+
+        $msgDeleteContact = Helper::flushMessage('Message cannot be deleted', 'alert alert-danger text-center');
+
+    }
 }
 
 ?>
@@ -170,7 +211,7 @@ if (isset($_POST['message'])) {
                                 <th>Last Name</th>
                                 <th>Prix</th>
                                 <th>Cv's</th>
-                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -220,7 +261,7 @@ if (isset($_POST['message'])) {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
                         <h1 class="h2">All Users</h1>
                     </div>
-
+                    <?= isset($msgDeleteUser) ? $msgDeleteUser : '' ;?>
                     <table class="hover row-border stripe" id="users" style="width:100%">
                         <thead>
                             <tr>
@@ -228,6 +269,8 @@ if (isset($_POST['message'])) {
                                 <th>Last Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,6 +280,12 @@ if (isset($_POST['message'])) {
                                     <td><?= $user->lname ?></td>
                                     <td><?= $user->email ?></td>
                                     <td><?= $user->role ?></td>
+                                    <td><?php if ($user->status == 0) { echo 'En attente'; }else{ if($user->status == 1) { echo 'Actif'; } } ?></td>
+                                    <td>
+                                        <form method="POST" class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-danger w-100 me-1" id="userId" name="userId" value="<?= $user->id ?>"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -245,7 +294,7 @@ if (isset($_POST['message'])) {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="contact">
                         <h1 class="h2">Contact</h1>
                     </div>
-
+                    <?= isset($msgDeleteContact) ? $msgDeleteContact : '' ;?>
                     <table class="hover row-border stripe" id="contacts" style="width:100%">
                         <thead>
                             <tr>
@@ -254,6 +303,7 @@ if (isset($_POST['message'])) {
                                 <th>Phone</th>
                                 <th>Subject</th>
                                 <th>Message</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -264,6 +314,11 @@ if (isset($_POST['message'])) {
                                     <td>test</td>
                                     <td><?= $contact->subject ?></td>
                                     <td><?= $contact->message ?></td>
+                                    <td>
+                                        <form method="POST" class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-danger w-100 me-1" id="messagId" name="messagId" value="<?= $contact->id ?>"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
