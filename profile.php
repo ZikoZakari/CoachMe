@@ -21,9 +21,14 @@ if ($_SESSION['role'] === 'Admin') {
 $user = new User();
 $user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
 
-$contact = new Coach;
-$contacts = $contact->getAllContact($_SESSION['id']); 
-$contactsAccs = $contact->getAllAcceptedContact($_SESSION['id']); 
+$coach = new Coach;
+$contacts = $coach->getAllContact($_SESSION['id']);
+$contactsAccs = $coach->getAllAcceptedContact($_SESSION['id']);
+$contactsClients = $coach->getAllContactCoach($_SESSION['id']);
+
+
+
+// var_dump($_POST);
 
 if (isset($_POST['save-profile'])) {
 
@@ -99,6 +104,77 @@ if (isset($_POST['save-detail'])) {
   }
 }
 
+if(isset($_POST['accept'])){
+
+  extract($_POST);
+
+  try{
+
+    $acc = new User;
+    $acc->updateCoachClientStatus($accept);
+    echo $msgCont = Helper::flushMessage("Demande accepter","alert alert-success text-center");
+
+  } catch(Exception $e) {
+
+    echo $msgCont = Helper::flushMessage("Erreur","alert alert-danger text-center");
+
+  }
+}
+
+if (isset($_POST['decline'])){
+
+  extract($_POST);
+
+  try{
+
+    $dec = new User;
+    $dec->deleteCoachClientStatus($decline);
+    echo $msgCont = Helper::flushMessage("Demande décliner","alert alert-success text-center");
+
+  } catch(Exception $e) {
+
+    echo $msgCont = Helper::flushMessage("Erreur","alert alert-danger text-center");
+
+  }
+
+}
+
+if (isset($_POST['save-password'])){
+
+  if (!empty($_POST['current']) && !empty($_POST['new']) && !empty($_POST['confirm'])){
+
+    extract($_POST);
+    $current = Helper::md5Hash($current);
+
+    if ($user->password == $current){
+
+      if ($new == $confirm){
+
+        $new = Helper::md5Hash($new);
+
+        try{
+
+          $password = new User;
+          $password->newPassword($new,$_SESSION['id']);
+          echo $msg = Helper::flushMessage("Mot de passe changer","alert alert-success text-center");
+
+        } catch (Exception $e){
+          echo $msg = Helper::flushMessage("Une erreur est survenue","alert alert-danger text-center");
+        }
+
+      }else{
+        echo $msg = Helper::flushMessage("Mot de passe pas cohérent","alert alert-danger text-center");
+      }
+
+    }else{
+      echo $msg = Helper::flushMessage("Mot de passe erroné","alert alert-danger text-center");
+    }
+
+  }else{
+    echo $msg = Helper::flushMessage("Veuillez remplir tous les champs correctement","alert alert-danger text-center");
+  }
+}
+
 ?>
 
 <section class="py-3 py-md-5 py-xl-8">
@@ -125,9 +201,6 @@ if (isset($_POST['save-detail'])) {
                 </p>
                 <div class="text-center mb-3">
                   <form method="POST" enctype="multipart/form-data">
-                    <!-- <a class="btn btn-outline-danger" href="?logout=1">
-                      <i class="bi bi-box-arrow-left"></i>
-                    </a> -->
                     <input type="file" id="pictur" name="pictur" hidden onchange="this.form.submit()" />
                     <label for="pictur" class="btn btn-primary w-100">Nouvelle image</label>
                   </form>
@@ -140,21 +213,6 @@ if (isset($_POST['save-detail'])) {
                   </form>
                 </div>
                 <?php } ?>
-                
-                <!-- <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <h6 class="m-0">Followers</h6>
-                    <span>7,854</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <h6 class="m-0">Following</h6>
-                    <span>5,987</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <h6 class="m-0">Friends</h6>
-                    <span>4,620</span>
-                  </li>
-                </ul> -->
               </div>
             </div>
           </div>
@@ -199,7 +257,13 @@ if (isset($_POST['save-detail'])) {
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                  Contact
+                  Mes clients
+                </button>
+              </li>
+              <?php }else{ ?>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="coach-tab" data-bs-toggle="tab" data-bs-target="#coach-tab-pane" type="button" role="tab" aria-controls="coach-tab-pane" aria-selected="false">
+                  Mes coachs
                 </button>
               </li>
               <?php } ?>
@@ -329,7 +393,7 @@ if (isset($_POST['save-detail'])) {
                         <th>Last name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th></th>
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -340,8 +404,10 @@ if (isset($_POST['save-detail'])) {
                           <td><?= $contact->email ?></td>
                           <td><?= $contact->phone ?></td>
                           <td>
-                            <button class="btn btn-success me-2">Accept</button>
-                            <button class="btn btn-danger">Decline</button>
+                            <form method="POST">
+                              <button class="btn btn-success me-2" id="accept" name="accept" value="<?= $contact->id ?>"><i class="bi bi-check"></i></button>
+                              <button class="btn btn-danger" id="decline" name="decline" value="<?= $contact->id ?>"><i class="bi bi-x"></i></button>
+                            </form>
                           </td>
                         </tr>
                       <?php endforeach; ?>
@@ -354,7 +420,6 @@ if (isset($_POST['save-detail'])) {
                         <th>Last name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -394,24 +459,51 @@ if (isset($_POST['save-detail'])) {
                   </div>
                 </form>
               </div>
-              <?php } ?>
+              <?php }else{ ?>
+              <div class="tab-pane fade" id="coach-tab-pane" role="tabpanel" aria-labelledby="coach-tab" tabindex="0">
+                <div class="row gy-3 gy-md-0">
+                  <table class="hover row-border stripe" id="example" style="width:100%">
+                    <thead>
+                      <tr>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($contactsClients as $contactsClient) :?>
+                        <tr>
+                          <td><?= $contactsClient->fname ?></td>
+                          <td><?= $contactsClient->lname ?></td>
+                          <td><?= $contactsClient->email ?></td>
+                          <td><?= $contactsClient->phone ?></td>
+                          <td><?php if ($contactsClient->status == 0){ echo '<p class="text-danger">En attante'; }else{ echo '<p class="text-success">Accepter'; } ?></p></td>
+                        </tr>
+                      <?php endforeach; ?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <?php }?>
               <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                <form action="#!">
+                <form method="POST" enctype="multipart/form-data">
                   <div class="row gy-3 gy-xxl-4">
                     <div class="col-12">
-                      <label for="currentPassword" class="form-label">Mot de passe courant</label>
-                      <input type="password" class="form-control" id="currentPassword" />
+                      <label for="current" class="form-label">Mot de passe courant</label>
+                      <input type="password" class="form-control" id="current" name="current"/>
                     </div>
                     <div class="col-12">
-                      <label for="newPassword" class="form-label">Nouveau mot de passe</label>
-                      <input type="password" class="form-control" id="newPassword" />
+                      <label for="new" class="form-label">Nouveau mot de passe</label>
+                      <input type="password" class="form-control" id="new" name="new"/>
                     </div>
                     <div class="col-12">
-                      <label for="confirmPassword" class="form-label">Confirmation du mot de passe</label>
-                      <input type="password" class="form-control" id="confirmPassword" />
+                      <label for="confirm" class="form-label">Confirmation du mot de passe</label>
+                      <input type="password" class="form-control" id="confirm" name="confirm"/>
                     </div>
                     <div class="col-12">
-                      <button type="submit" class="btn btn-primary">
+                      <button type="submit" class="btn btn-primary" id="save-password" name="save-password">
                         Enregister
                       </button>
                     </div>

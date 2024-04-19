@@ -22,4 +22,11 @@ class Contact{
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
+
+    public function deleteContactMessag($id){
+        $sql = "DELETE FROM contact WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+    }
 }

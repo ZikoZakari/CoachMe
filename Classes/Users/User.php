@@ -120,12 +120,57 @@ class User{
     }
 
     public function getAllUsers(){
-        $sql = "SELECT fname, lname, email, cv, role, status FROM users WHERE role != 'Admin'";
+        $sql = "SELECT id, fname, lname, email, cv, role, status FROM users WHERE role != 'Admin'";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
+    }
+
+
+    public function deleteUserLinkDetails($id){
+        $sql = "DELETE FROM details WHERE id_user = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+    }
+
+    public function deleteUserLinkCoach_client($id){
+        $sql = "DELETE FROM coach_client WHERE (id_coach = ? OR id_client = ?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id,$id]);
+    }
+
+    public function deleteUser($id){
+        $sql = "DELETE FROM users WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+    }
+
+    public function newPassword($pass,$id){
+        $sql = "UPDATE users SET password = ? WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$pass,$id]);
+    }
+
+    public function updateCoachClientStatus($id){
+        $sql = "UPDATE coach_client SET status = '1' WHERE id_client = ? ";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id]);
+    }
+
+    public function deleteCoachClientStatus($id){
+        $sql = "DELETE FROM coach_client WHERE id_client = ? ";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
     }
 
 }

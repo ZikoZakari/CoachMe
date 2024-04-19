@@ -69,4 +69,16 @@ class Coach{
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
+
+    public function getAllContactCoach($id){
+        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach FROM users U
+        LEFT JOIN coach_client C
+        ON U.id = C.id_coach
+        WHERE C.id_client = ? ";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
 }
