@@ -311,7 +311,7 @@ if (isset($_POST['messagId'])) {
                                 <tr>
                                     <td><?= $contact->name ?></td>
                                     <td><?= $contact->email ?></td>
-                                    <td>test</td>
+                                    <td><?= $contact->phone ?></td>
                                     <td><?= $contact->subject ?></td>
                                     <td><?= $contact->message ?></td>
                                     <td>
