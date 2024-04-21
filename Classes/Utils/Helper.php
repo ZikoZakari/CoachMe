@@ -149,9 +149,16 @@ class Helper
         }
     }
 
-    public static function checkIfExist($id_coach,$id_client){
+    public static function checkIfNotExist($table,$id_coach,$id_client){
 
-        $sql = "SELECT id FROM coach_client WHERE id_coach = ? AND id_client = ?";
+        if ($table == 1){
+            $sql = "SELECT id FROM coach_client WHERE id_coach = ? AND id_client = ?";
+        }
+
+        if ($table == 2){
+            $sql = "SELECT id FROM recommend WHERE id_coach = ? AND id_client = ?";
+        }
+
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute([$id_coach,$id_client]);
@@ -182,5 +189,17 @@ class Helper
         if ($rows == NULL)
             return false;
         return true;
+    }
+
+    public static function messagNotExist($id){
+        $sql = "SELECT id FROM alert_messag WHERE id_user = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return true;
+        return false;
     }
 }

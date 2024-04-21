@@ -33,6 +33,7 @@ $coachs = $coach->getAllCoache();
 
 $user = new User;
 $users = $user->getAllUsers();
+$messagUsers = $user->getAllMessage();
 
 $contact = new Contact;
 $contacts = $contact->getAllMessages();
@@ -45,9 +46,17 @@ $newslatters = $newslatter->get();
 if (isset($_POST['accept'])) {
 
     extract($_POST);
-
-    $profil = new User;
-    $profil->updateStatusUser($accept);
+    try{
+        $profil = new User;
+        $profil->updateStatusUser($accept);
+        $msgDash = Helper::flushMessage('Utilisateur autorisé','alert alert-success text-center');
+    } catch (Exception $e){
+        $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center');
+    }
+    
+    // if (Helper::messagNotExist($accept)){
+        
+    // }
 }
 
 if (isset($_POST['userId'])) {
@@ -95,6 +104,42 @@ if (isset($_POST['messagId'])) {
 
         $msgDeleteContact = Helper::flushMessage('Message cannot be deleted', 'alert alert-danger text-center');
 
+    }
+}
+
+if (isset($_POST['message-alert'])){
+
+    if (!empty($_POST['title']) && !empty($_POST['message'])){
+
+        extract($_POST);
+        $title = Helper::sanitizeString($title);
+        $message = Helper::sanitizeString($message);
+
+        if (Helper::messagNotExist($id)){
+
+            try{
+            $messag = new User;
+            $messag->sendMessageAlert($title,$message,$id);
+            $msgDash = Helper::flushMessage('Message envoyer','alert alert-success text-center');
+            } catch (Exception $e) {
+               $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center'); 
+            }
+        }else{  
+            $msgDash = Helper::flushMessage('Message deja envoyer','alert alert-danger text-center');
+        }
+    }else{
+        $msgDash = Helper::flushMessage('Veuillez remplir tous les champs','alert alert-danger text-center');
+    }
+}
+
+if (isset($_POST['user-messag-Id'])){
+
+    try{
+        $delete = new User;
+        $delete->deleteAlertMessage($_POST['user-messag-Id']);
+        $msgDeleteAlert =  Helper::flushMessage('Message deleted', 'alert alert-success text-center');
+    } catch (Exception $e){
+        $msgDeleteAlert = Helper::flushMessage('ERROR','alert alert-danger text-center');
     }
 }
 
@@ -203,7 +248,7 @@ if (isset($_POST['messagId'])) {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">
                         <h1 class="h2">Dashboard</h1>
                     </div>
-
+                    <?= isset($msgDash) ? $msgDash : '' ;?>
                     <table class="hover row-border stripe" id="dashboards" style="width:100%">
                         <thead>
                             <tr>
@@ -225,8 +270,9 @@ if (isset($_POST['messagId'])) {
                                                                                                                                                                                         } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal">Message</button>
-                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
+                                            <input type="number" id="hide" name="hide" value="" hidden>
+                                            <a type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="addValueTo(<?= $coach->id ?>)"><i class="bi bi-chat-dots-fill"></i></a>
+                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>"><i class="bi bi-check"></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -243,20 +289,52 @@ if (isset($_POST['messagId'])) {
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" enctype="multipart/form-data">
+                                        <input type="test" id="id" name="id" hidden>
                                         <div class="mb-3">
-                                            <label for="recipient-name" class="col-form-label">Titre</label>
-                                            <input type="text" class="form-control" id="recipient-name" name="recipient-name">
+                                            <label for="title" class="col-form-label">Titre</label>
+                                            <input type="text" class="form-control" id="title" name="title">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="message-text" class="col-form-label">Message</label>
-                                            <textarea class="form-control" id="message-text" name="message-text"></textarea>
+                                            <label for="message" class="col-form-label">Message</label>
+                                            <textarea class="form-control" id="message" name="message"></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary" id="submit" name="submit" value="<?= $coach->fname ?>">Send</button>
+                                        <button type="submit" class="btn btn-primary" id="message-alert" name="message-alert">Send</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
+                        <h1 class="h2">Messages d'alerte envoyer</h1>
+                    </div>
+                    <?= isset($msgDeleteAlert) ? $msgDeleteAlert : '' ;?>
+                    <table class="hover row-border stripe" id="users" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Title</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($messagUsers as $messagUser) : ?>
+                                <tr>
+                                    <td><?= $messagUser->fname ?></td>
+                                    <td><?= $messagUser->lname ?></td>
+                                    <td><?= $messagUser->email ?></td>
+                                    <td><?= $messagUser->title ?></td>
+                                    <td>
+                                        <form method="POST" class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-danger w-100 me-1" id="user-messag-Id" name="user-messag-Id" value="<?= $messagUser->id ?>"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
                         <h1 class="h2">All Users</h1>
@@ -611,7 +689,12 @@ if (isset($_POST['messagId'])) {
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
         </symbol>
     </svg>
-
+    <script>
+        function addValueTo(id) {
+            var input = document.getElementById("id"); // Sélectionner l'input par son ID
+            input.value = id;
+        }
+    </script>
     <script src="static/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>

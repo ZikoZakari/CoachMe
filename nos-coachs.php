@@ -21,7 +21,7 @@ include_once "header.php";
 <section class="py-5">
 
     <div class="container px-4 px-lg-5">
-        <div class="col-md-3 mb-5">
+        <!-- <div class="col-md-3 mb-5">
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -30,12 +30,12 @@ include_once "header.php";
                 </span>
                 <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
             </div>
-        </div>
+        </div> -->
         <div class="row gx-4 gx-lg-4 row-cols-1 row-cols-md-3 row-cols-xl-4">
             <?php foreach ($coachs as $coach) :?>
             <div class="col mb-5">
                 <div class="card h-100 rounded-5 shadow-lg">
-                    <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (5)</div>
+                    <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (<?= $coach->recommend ?>)</div>
                     <img class="card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) { echo 'uploads/img/'.$coach->pictur; }else{ echo 'images/profile-img-1.jpg'; } ?>" alt="..." />
                     <div class="card-body mt-3">
                         <div class="text-center">

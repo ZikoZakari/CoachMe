@@ -19,7 +19,7 @@ if (isset($_POST['submit'])) {
 
     if ($_SESSION['role'] == 'Client') {
 
-        if (HELPER::checkIfExist($_GET['coach'], $submit)) {
+        if (HELPER::checkIfNotExist(1,$_GET['coach'], $submit)) {
             try {
 
                 $add = new Coach;
@@ -34,6 +34,29 @@ if (isset($_POST['submit'])) {
         }
     } else {
         $msg = Helper::flushMessage('Il est impossible de vous inscription aux tant que coach', 'alert alert-danger text-center');
+    }
+}
+
+if (isset($_POST['recommend'])){
+    extract($_POST);
+
+    if ($_SESSION['role'] == 'Client') {
+
+        if (HELPER::checkIfNotExist(2,$_GET['coach'], $recommend)) {
+            try {
+
+                $add = new Coach;
+                $add->addRecommend($recommend,$_GET['coach']);
+                $msg = Helper::flushMessage('DONE', 'alert alert-success text-center');
+
+            } catch (Exception $e) {
+                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
+            }
+        } else {
+            $msg = Helper::flushMessage('Deja Recommander', 'alert alert-danger text-center');
+        }
+    } else {
+        $msg = Helper::flushMessage('Il est impossible de recommander aux tant que coach', 'alert alert-danger text-center');
     }
 }
 
@@ -72,12 +95,13 @@ if (isset($_POST['submit'])) {
                                 <div class="text-center">
                                     <form method="POST" enctype="multipart/form-data">
                                         <button type="submit" class="btn btn-success mb-1 w-100" id="submit" name="submit" value="<?= $_SESSION['id'] ?>">Recuter</button>
+                                        <button type="submit" class="btn btn-primary mb-1 w-100" id="recommend" name="recommend" value="<?= $_SESSION['id'] ?>">Je recommander</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php if (!HELPER::checkIfExist($_GET['coach'], $_SESSION['id'])) { ?>
+                    <?php if (!HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id'])) { ?>
                     <div class="col-12">
                         <div class="card widget-card shadow-sm">
                             <div class="card-header text-bg-primary">Contact</div>

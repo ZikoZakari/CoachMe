@@ -173,4 +173,36 @@ class User{
         $stmt->execute([$id]);
     }
 
+    public function sendMessageAlert($title,$messag,$id){
+        $sql = "INSERT INTO alert_messag(title,messag,id_user) VALUES (?,?,?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$title,$messag,$id]);
+    }
+
+    public function getMessageAlert($id){
+        $sql = "SELECT title,messag FROM alert_messag WHERE id_user = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function getAllMessage(){
+        $sql = "SELECT U.fname, U.lname, U.email, M.title, M.id FROM users U, alert_messag M WHERE U.id = M.id_user";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function deleteAlertMessage($id){
+        $sql = "DELETE FROM alert_messag WHERE id = ? ";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+    }
 }
