@@ -54,9 +54,9 @@ if (isset($_POST['accept'])) {
         $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center');
     }
     
-    if (Helper::messagNotExist($accept)){
+    // if (Helper::messagNotExist($accept)){
         
-    }
+    // }
 }
 
 if (isset($_POST['userId'])) {
