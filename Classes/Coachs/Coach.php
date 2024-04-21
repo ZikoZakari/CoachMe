@@ -81,4 +81,12 @@ class Coach{
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
+
+    public function addRecommend($id_client, $id_coach){
+        $sql = "INSERT INTO recommend(id_client,id_coach) VALUES (?,?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id_client,$id_coach]);
+    }
 }
