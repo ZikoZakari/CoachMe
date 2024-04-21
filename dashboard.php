@@ -33,6 +33,7 @@ $coachs = $coach->getAllCoache();
 
 $user = new User;
 $users = $user->getAllUsers();
+$messagUsers = $user->getAllMessage();
 
 $contact = new Contact;
 $contacts = $contact->getAllMessages();
@@ -103,16 +104,34 @@ if (isset($_POST['message-alert'])){
     if (!empty($_POST['title']) && !empty($_POST['message'])){
 
         extract($_POST);
+        $title = Helper::sanitizeString($title);
+        $message = Helper::sanitizeString($message);
 
         if (Helper::messagNotExist($id)){
+
+            try{
             $messag = new User;
             $messag->sendMessageAlert($title,$message,$id);
             $msgDash = Helper::flushMessage('Message envoyer','alert alert-success text-center');
-        }else{
+            } catch (Exception $e) {
+               $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center'); 
+            }
+        }else{  
             $msgDash = Helper::flushMessage('Message deja envoyer','alert alert-danger text-center');
         }
     }else{
         $msgDash = Helper::flushMessage('Veuillez remplir tous les champs','alert alert-danger text-center');
+    }
+}
+
+if (isset($_POST['user-messag-Id'])){
+
+    try{
+        $delete = new User;
+        $delete->deleteAlertMessage($_POST['user-messag-Id']);
+        $msgDeleteAlert =  Helper::flushMessage('Message deleted', 'alert alert-success text-center');
+    } catch (Exception $e){
+        $msgDeleteAlert = Helper::flushMessage('ERROR','alert alert-danger text-center');
     }
 }
 
@@ -244,8 +263,8 @@ if (isset($_POST['message-alert'])){
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
                                             <input type="number" id="hide" name="hide" value="" hidden>
-                                            <a type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="addValueTo(<?= $coach->id ?>)">Message</a>
-                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
+                                            <a type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="addValueTo(<?= $coach->id ?>)"><i class="bi bi-chat-dots-fill"></i></a>
+                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>"><i class="bi bi-check"></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -277,6 +296,37 @@ if (isset($_POST['message-alert'])){
                             </div>
                         </div>
                     </div>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
+                        <h1 class="h2">Messages d'alerte envoyer</h1>
+                    </div>
+                    <?= isset($msgDeleteAlert) ? $msgDeleteAlert : '' ;?>
+                    <table class="hover row-border stripe" id="users" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Title</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($messagUsers as $messagUser) : ?>
+                                <tr>
+                                    <td><?= $messagUser->fname ?></td>
+                                    <td><?= $messagUser->lname ?></td>
+                                    <td><?= $messagUser->email ?></td>
+                                    <td><?= $messagUser->title ?></td>
+                                    <td>
+                                        <form method="POST" class="d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-danger w-100 me-1" id="user-messag-Id" name="user-messag-Id" value="<?= $messagUser->id ?>"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
                         <h1 class="h2">All Users</h1>

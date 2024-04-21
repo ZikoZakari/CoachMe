@@ -189,4 +189,20 @@ class User{
         $rows = $stmt->fetch(PDO::FETCH_OBJ);
         return $rows;
     }
+
+    public function getAllMessage(){
+        $sql = "SELECT U.fname, U.lname, U.email, M.title, M.id FROM users U, alert_messag M WHERE U.id = M.id_user";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function deleteAlertMessage($id){
+        $sql = "DELETE FROM alert_messag WHERE id = ? ";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+    }
 }
