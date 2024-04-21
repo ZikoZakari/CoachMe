@@ -8,7 +8,12 @@ use PDO;
 
 class Coach{
     public function coaches(){
-        $sql = "SELECT U.id, U.fname, U.lname, U.job, U.pictur, D.prix FROM users U, details D WHERE U.role = 'Coach' AND U.status = '1' AND U.id = D.id_user";
+        $sql = "SELECT U.id, U.fname, U.lname, U.job, U.pictur, D.prix, (SELECT COUNT(*) FROM recommend R WHERE R.id_coach = U.id) AS recommend FROM users U 
+        LEFT JOIN details D
+        ON U.id = D.id_user
+        LEFT JOIN recommend R
+        ON D.id_user = R.id_coach
+        WHERE U.role = 'Coach' AND U.status = '1'";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
