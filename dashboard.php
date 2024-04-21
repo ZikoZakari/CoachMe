@@ -98,6 +98,24 @@ if (isset($_POST['messagId'])) {
     }
 }
 
+if (isset($_POST['message-alert'])){
+
+    if (!empty($_POST['title']) && !empty($_POST['message'])){
+
+        extract($_POST);
+
+        if (Helper::messagNotExist($id)){
+            $messag = new User;
+            $messag->sendMessageAlert($title,$message,$id);
+            $msgDash = Helper::flushMessage('Message envoyer','alert alert-success text-center');
+        }else{
+            $msgDash = Helper::flushMessage('Message deja envoyer','alert alert-danger text-center');
+        }
+    }else{
+        $msgDash = Helper::flushMessage('Veuillez remplir tous les champs','alert alert-danger text-center');
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="auto">
@@ -203,7 +221,7 @@ if (isset($_POST['messagId'])) {
                     <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">
                         <h1 class="h2">Dashboard</h1>
                     </div>
-
+                    <?= isset($msgDash) ? $msgDash : '' ;?>
                     <table class="hover row-border stripe" id="dashboards" style="width:100%">
                         <thead>
                             <tr>
@@ -225,7 +243,8 @@ if (isset($_POST['messagId'])) {
                                                                                                                                                                                         } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
-                                            <button type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal">Message</button>
+                                            <input type="number" id="hide" name="hide" value="" hidden>
+                                            <a type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="addValueTo(<?= $coach->id ?>)">Message</a>
                                             <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>">Accepter</button>
                                         </form>
                                     </td>
@@ -243,15 +262,16 @@ if (isset($_POST['messagId'])) {
                                 </div>
                                 <div class="modal-body">
                                     <form method="POST" enctype="multipart/form-data">
+                                        <input type="test" id="id" name="id" hidden>
                                         <div class="mb-3">
-                                            <label for="recipient-name" class="col-form-label">Titre</label>
-                                            <input type="text" class="form-control" id="recipient-name" name="recipient-name">
+                                            <label for="title" class="col-form-label">Titre</label>
+                                            <input type="text" class="form-control" id="title" name="title">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="message-text" class="col-form-label">Message</label>
-                                            <textarea class="form-control" id="message-text" name="message-text"></textarea>
+                                            <label for="message" class="col-form-label">Message</label>
+                                            <textarea class="form-control" id="message" name="message"></textarea>
                                         </div>
-                                        <button type="submit" class="btn btn-primary" id="submit" name="submit" value="<?= $coach->fname ?>">Send</button>
+                                        <button type="submit" class="btn btn-primary" id="message-alert" name="message-alert">Send</button>
                                     </form>
                                 </div>
                             </div>
@@ -611,7 +631,12 @@ if (isset($_POST['messagId'])) {
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
         </symbol>
     </svg>
-
+    <script>
+        function addValueTo(id) {
+            var input = document.getElementById("id"); // Sélectionner l'input par son ID
+            input.value = id;
+        }
+    </script>
     <script src="static/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>

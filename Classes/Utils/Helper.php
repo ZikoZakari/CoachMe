@@ -190,4 +190,16 @@ class Helper
             return false;
         return true;
     }
+
+    public static function messagNotExist($id){
+        $sql = "SELECT id FROM alert_messag WHERE id_user = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return true;
+        return false;
+    }
 }

@@ -19,16 +19,13 @@ if ($_SESSION['role'] === 'Admin') {
 }
 
 $user = new User();
+$message = $user->getMessageAlert($_SESSION['id']);
 $user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
 
 $coach = new Coach;
 $contacts = $coach->getAllContact($_SESSION['id']);
 $contactsAccs = $coach->getAllAcceptedContact($_SESSION['id']);
 $contactsClients = $coach->getAllContactCoach($_SESSION['id']);
-
-
-
-// var_dump($_POST);
 
 if (isset($_POST['save-profile'])) {
 
@@ -179,6 +176,12 @@ if (isset($_POST['save-password'])){
 
 <section class="py-3 py-md-5 py-xl-8">
   <div class="container">
+    <?php if (!Helper::messagNotExist($_SESSION['id']) && $user->status == 0){?>
+      <div class="alert alert-danger">
+        <h5><?= $message->title ?></h5>
+        <p><?= $message->messag ?></p>
+      </div>
+    <?php } ?>
     <div class="row gy-4 gy-lg-0">
       <div class="col-12 col-lg-4 col-xl-3">
         <div class="row gy-4">
