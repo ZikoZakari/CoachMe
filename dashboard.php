@@ -46,9 +46,17 @@ $newslatters = $newslatter->get();
 if (isset($_POST['accept'])) {
 
     extract($_POST);
-
-    $profil = new User;
-    $profil->updateStatusUser($accept);
+    try{
+        $profil = new User;
+        $profil->updateStatusUser($accept);
+        $msgDash = Helper::flushMessage('Utilisateur autorisé','alert alert-success text-center');
+    } catch (Exception $e){
+        $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center');
+    }
+    
+    if (Helper::messagNotExist($accept)){
+        
+    }
 }
 
 if (isset($_POST['userId'])) {
