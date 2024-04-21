@@ -13,7 +13,8 @@ class Coach{
         ON U.id = D.id_user
         LEFT JOIN recommend R
         ON D.id_user = R.id_coach
-        WHERE U.role = 'Coach' AND U.status = '1'";
+        WHERE U.role = 'Coach' AND U.status = '1'
+        GROUP BY U.id";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();

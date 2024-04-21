@@ -49,14 +49,15 @@ if (isset($_POST['accept'])) {
     try{
         $profil = new User;
         $profil->updateStatusUser($accept);
+        if (!Helper::messagNotExist($accept)){
+            $profil->deleteAlertMessage($accept);
+        }
         $msgDash = Helper::flushMessage('Utilisateur autorisé','alert alert-success text-center');
     } catch (Exception $e){
         $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center');
     }
     
-    // if (Helper::messagNotExist($accept)){
-        
-    // }
+    // 
 }
 
 if (isset($_POST['userId'])) {
@@ -75,6 +76,12 @@ if (isset($_POST['userId'])) {
         if (Helper::checkIfLinkExist(2, $userId)) {
 
             $delete->deleteUserLinkCoach_client($userId);
+
+        }
+
+        if (!Helper::messagNotExist($userId)){
+
+            $delete->deleteAlertMessage($userId);
 
         }
 
@@ -328,7 +335,7 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $messagUser->title ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-danger w-100 me-1" id="user-messag-Id" name="user-messag-Id" value="<?= $messagUser->id ?>"><i class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-danger w-100 me-1" id="user-messag-Id" name="user-messag-Id" value="<?= $messagUser->id_user ?>"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>
