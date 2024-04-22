@@ -91,12 +91,12 @@ class User{
         return $rows;
     }
 
-    public function updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $id){
-        $sql = "UPDATE users SET fname = ?, lname = ?, about = ?, address = ?, city = ?, phone = ?, job = ? WHERE id = ?";
+    public function updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $skills, $id){
+        $sql = "UPDATE users SET fname = ?, lname = ?, about = ?, address = ?, city = ?, phone = ?, job = ?, skills = ? WHERE id = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
 
-        $stmt->execute([$fname, $lname, $about, $adress, $city, $phone, $job, $id]);
+        $stmt->execute([$fname, $lname, $about, $adress, $city, $phone, $job, $skills, $id]);
     }
 
     public function updateFile($file, $id, $type){

@@ -20,43 +20,79 @@ if ($_SESSION['role'] === 'Admin') {
 
 $user = new User();
 $message = $user->getMessageAlert($_SESSION['id']);
-$user = $user->get_user_info($_SESSION['id'],$_SESSION['role']);
+$user = $user->get_user_info($_SESSION['id'], $_SESSION['role']);
+$user->skills = explode(',',$user->skills);
 
 $coach = new Coach;
 $contacts = $coach->getAllContact($_SESSION['id']);
 $contactsAccs = $coach->getAllAcceptedContact($_SESSION['id']);
 $contactsClients = $coach->getAllContactCoach($_SESSION['id']);
 
+
 if (isset($_POST['save-profile'])) {
 
-  if (!empty($_POST["fname"]) && !empty($_POST["lname"]) && !empty($_POST["about"]) && !empty($_POST["adress"]) && !empty($_POST["city"]) && !empty($_POST["phone"]) && !empty($_POST["job"])) {
+  if ($_SESSION['role'] == 'Coach') {
 
-    extract($_POST);
+    if (!empty($_POST["fname"]) && !empty($_POST["lname"]) && !empty($_POST["about"]) && !empty($_POST["adress"]) && !empty($_POST["city"]) && !empty($_POST["phone"]) && !empty($_POST["job"]) && !empty($_POST['skills'])) {
 
-    $fname = Helper::sanitizeString($fname);
-    $lname = Helper::sanitizeString($lname);
-    $adress = Helper::sanitizeString($adress);
-    $city = Helper::sanitizeString($city);
+      extract($_POST);
 
-    if (Helper::validateName($fname) && Helper::validateName($lname) && Helper::validatePhone($phone)) {
+      $skills = implode(',',$skills);
 
-      try {
+      if (Helper::validateName($fname) && Helper::validateName($lname) && Helper::validatePhone($phone)) {
 
-        $profil = new User();
-        $profil->updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $_SESSION['id']);
-        echo $msg = Helper::flushMessage("Modifier avec succès", "alert alert-success text-center");
-      } catch (Exception $e) {
+        $fname = Helper::sanitizeString($fname);
+        $lname = Helper::sanitizeString($lname);
+        $adress = Helper::sanitizeString($adress);
+        $city = Helper::sanitizeString($city);
+        try {
 
-        echo $msg = Helper::flushMessage("Compte existe déja", "alert alert-danger text-center");
+          $profil = new User();
+          $profil->updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $skills, $_SESSION['id']);
+          echo $msg = Helper::flushMessage("Profile modifier avec succès", "alert alert-success text-center");
+        } catch (Exception $e) {
+
+          echo $msg = Helper::flushMessage("ERROR", "alert alert-danger text-center");
+        }
+      } else {
+
+        echo $msg = Helper::flushMessage("Veuillez saissire correctement", "alert alert-danger text-center");
       }
-
     } else {
 
-      echo $msg = Helper::flushMessage("Veuillez saissire correctement", "alert alert-danger text-center");
+      echo $msg = Helper::flushMessage("Veuillez remplire tous les champs necessaire", "alert alert-danger text-center");
     }
-  } else {
+  }
 
-    echo $msg = Helper::flushMessage("Veuillez remplire tous les champs necessaire", "alert alert-danger text-center");
+  if ($_SESSION['role'] == 'Client'){
+
+    if (!empty($_POST["fname"]) && !empty($_POST["lname"]) && !empty($_POST["about"]) && !empty($_POST["adress"]) && !empty($_POST["city"]) && !empty($_POST["phone"])) {
+
+      extract($_POST);
+
+      if (Helper::validateName($fname) && Helper::validateName($lname) && Helper::validatePhone($phone)) {
+
+        $fname = Helper::sanitizeString($fname);
+        $lname = Helper::sanitizeString($lname);
+        $adress = Helper::sanitizeString($adress);
+        $city = Helper::sanitizeString($city);
+        try {
+
+          $profil = new User();
+          $profil->updateUser($fname, $lname, $about, $adress, $city, $phone, NULL, NULL, $_SESSION['id']);
+          echo $msg = Helper::flushMessage("Profile modifier avec succès", "alert alert-success text-center");
+        } catch (Exception $e) {
+
+          echo $msg = Helper::flushMessage("ERROR", "alert alert-danger text-center");
+        }
+      } else {
+
+        echo $msg = Helper::flushMessage("Veuillez saissire correctement", "alert alert-danger text-center");
+      }
+    } else {
+
+      echo $msg = Helper::flushMessage("Veuillez remplire tous les champs necessaire", "alert alert-danger text-center");
+    }
   }
 }
 
@@ -68,7 +104,7 @@ if (!empty($_FILES['pictur'])) {
     $updateImg = new User;
     $img = $file->imgUpload($_FILES['pictur']);
     $updateImg->updateFile($img, $_SESSION['id'], 'img');
-    echo $msg = Helper::flushMessage("Done", "alert alert-success text-center");
+    echo $msg = Helper::flushMessage("Image telecharger avec succès", "alert alert-success text-center");
   } else {
 
     echo $msg = Helper::flushMessage("error image", "alert alert-danger text-center");
@@ -95,80 +131,79 @@ if (isset($_POST['save-detail'])) {
   if (!empty($_POST["price"]) && !empty($_POST["detail"])) {
 
     extract($_POST);
+    try {
 
-    $detail = new User();
-    $detail->details($price, $_POST['detail'], $_SESSION['id']);
+      $detail = new User();
+      $detail->details($price, $_POST['detail'], $_SESSION['id']);
+      echo $msg = Helper::flushMessage("Detaile modifier avec succès", "alert alert-danger text-center");
+    } catch (Exception $e) {
+
+      echo $msg = Helper::flushMessage("ERROR", "alert alert-danger text-center");
+    }
+  } else {
+
+    echo $msg = Helper::flushMessage("Veuillez remplire tous les champs necessaire", "alert alert-danger text-center");
   }
 }
 
-if(isset($_POST['accept'])){
+if (isset($_POST['accept'])) {
 
   extract($_POST);
 
-  try{
+  try {
 
     $acc = new User;
     $acc->updateCoachClientStatus($accept);
-    echo $msgCont = Helper::flushMessage("Demande accepter","alert alert-success text-center");
+    echo $msgCont = Helper::flushMessage("Demande accepter", "alert alert-success text-center");
+  } catch (Exception $e) {
 
-  } catch(Exception $e) {
-
-    echo $msgCont = Helper::flushMessage("Erreur","alert alert-danger text-center");
-
+    echo $msgCont = Helper::flushMessage("Erreur", "alert alert-danger text-center");
   }
 }
 
-if (isset($_POST['decline'])){
+if (isset($_POST['decline'])) {
 
   extract($_POST);
 
-  try{
+  try {
 
     $dec = new User;
     $dec->deleteCoachClientStatus($decline);
-    echo $msgCont = Helper::flushMessage("Demande décliner","alert alert-success text-center");
+    echo $msgCont = Helper::flushMessage("Demande décliner", "alert alert-success text-center");
+  } catch (Exception $e) {
 
-  } catch(Exception $e) {
-
-    echo $msgCont = Helper::flushMessage("Erreur","alert alert-danger text-center");
-
+    echo $msgCont = Helper::flushMessage("Erreur", "alert alert-danger text-center");
   }
-
 }
 
-if (isset($_POST['save-password'])){
+if (isset($_POST['save-password'])) {
 
-  if (!empty($_POST['current']) && !empty($_POST['new']) && !empty($_POST['confirm'])){
+  if (!empty($_POST['current']) && !empty($_POST['new']) && !empty($_POST['confirm'])) {
 
     extract($_POST);
     $current = Helper::md5Hash($current);
 
-    if ($user->password == $current){
+    if ($user->password == $current) {
 
-      if ($new == $confirm){
+      if ($new == $confirm) {
 
         $new = Helper::md5Hash($new);
-
-        try{
+        try {
 
           $password = new User;
-          $password->newPassword($new,$_SESSION['id']);
-          echo $msg = Helper::flushMessage("Mot de passe changer","alert alert-success text-center");
-
-        } catch (Exception $e){
-          echo $msg = Helper::flushMessage("Une erreur est survenue","alert alert-danger text-center");
+          $password->newPassword($new, $_SESSION['id']);
+          echo $msg = Helper::flushMessage("Mot de passe changer", "alert alert-success text-center");
+        } catch (Exception $e) {
+          echo $msg = Helper::flushMessage("Une erreur est survenue", "alert alert-danger text-center");
         }
-
-      }else{
-        echo $msg = Helper::flushMessage("Mot de passe pas cohérent","alert alert-danger text-center");
+      } else {
+        echo $msg = Helper::flushMessage("Mot de passe pas cohérent", "alert alert-danger text-center");
       }
-
-    }else{
-      echo $msg = Helper::flushMessage("Mot de passe erroné","alert alert-danger text-center");
+    } else {
+      echo $msg = Helper::flushMessage("Mot de passe erroné", "alert alert-danger text-center");
     }
-
-  }else{
-    echo $msg = Helper::flushMessage("Veuillez remplir tous les champs correctement","alert alert-danger text-center");
+  } else {
+    echo $msg = Helper::flushMessage("Veuillez remplir tous les champs correctement", "alert alert-danger text-center");
   }
 }
 
@@ -176,7 +211,7 @@ if (isset($_POST['save-password'])){
 
 <section class="py-3 py-md-5 py-xl-8">
   <div class="container">
-    <?php if (!Helper::messagNotExist($_SESSION['id']) && $user->status == 0){?>
+    <?php if (!Helper::messagNotExist($_SESSION['id']) && $user->status == 0) { ?>
       <div class="alert alert-danger">
         <h5><?= $message->title ?></h5>
         <p><?= $message->messag ?></p>
@@ -208,33 +243,28 @@ if (isset($_POST['save-password'])){
                     <label for="pictur" class="btn btn-primary w-100">Nouvelle image</label>
                   </form>
                 </div>
-                <?php if ($_SESSION['role'] == 'Coach'){ ?>
-                <div class="text-center">
-                  <form method="POST" enctype="multipart/form-data">
-                    <input type="file" id="cv" name="cv" hidden onchange="this.form.submit()" />
-                    <label for="cv" class="btn btn-warning w-100">Deposer votre CV ici</label>
-                  </form>
-                </div>
+                <?php if ($_SESSION['role'] == 'Coach') { ?>
+                  <div class="text-center">
+                    <form method="POST" enctype="multipart/form-data">
+                      <input type="file" id="cv" name="cv" hidden onchange="this.form.submit()" />
+                      <label for="cv" class="btn btn-warning w-100">Deposer votre CV ici</label>
+                    </form>
+                  </div>
                 <?php } ?>
               </div>
             </div>
           </div>
-          <?php if ($_SESSION['role'] == 'Coach'){ ?>
-          <div class="col-12">
-            <div class="card widget-card shadow-sm">
-              <div class="card-header text-bg-primary">Skills</div>
-              <div class="card-body">
-                <span class="badge text-bg-primary">HTML</span>
-                <span class="badge text-bg-primary">SCSS</span>
-                <span class="badge text-bg-primary">Javascript</span>
-                <span class="badge text-bg-primary">React</span>
-                <span class="badge text-bg-primary">Vue</span>
-                <span class="badge text-bg-primary">Angular</span>
-                <span class="badge text-bg-primary">UI</span>
-                <span class="badge text-bg-primary">UX</span>
+          <?php if ($_SESSION['role'] == 'Coach') { ?>
+            <div class="col-12">
+              <div class="card widget-card shadow-sm">
+                <div class="card-header text-bg-primary">Skills</div>
+                <div class="card-body">
+                <?php foreach($user->skills as $skill): ?>
+                  <span class="badge text-bg-primary"><?= $skill ?></span>
+                <?php endforeach; ?>
+                </div>
               </div>
             </div>
-          </div>
           <?php } ?>
         </div>
       </div>
@@ -252,23 +282,23 @@ if (isset($_POST['save-password'])){
                   Profile
                 </button>
               </li>
-              <?php if ($_SESSION['role'] == 'Coach'){ ?>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab-pane" type="button" role="tab" aria-controls="detail-tab-pane" aria-selected="false">
-                  Details
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
-                  Mes clients
-                </button>
-              </li>
-              <?php }else{ ?>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="coach-tab" data-bs-toggle="tab" data-bs-target="#coach-tab-pane" type="button" role="tab" aria-controls="coach-tab-pane" aria-selected="false">
-                  Mes coachs
-                </button>
-              </li>
+              <?php if ($_SESSION['role'] == 'Coach') { ?>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="detail-tab" data-bs-toggle="tab" data-bs-target="#detail-tab-pane" type="button" role="tab" aria-controls="detail-tab-pane" aria-selected="false">
+                    Details
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">
+                    Mes clients
+                  </button>
+                </li>
+              <?php } else { ?>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="coach-tab" data-bs-toggle="tab" data-bs-target="#coach-tab-pane" type="button" role="tab" aria-controls="coach-tab-pane" aria-selected="false">
+                    Mes coachs
+                  </button>
+                </li>
               <?php } ?>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">
@@ -296,12 +326,14 @@ if (isset($_POST['save-password'])){
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
                     <div class="p-2"><?= $user->lname ?></div>
                   </div>
+                  <?php if ($_SESSION['role'] == 'Coach') { ?>
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Job</div>
                   </div>
                   <div class="col-7 col-md-9 border-start border-bottom border-3">
                     <div class="p-2"><?= $user->job ?></div>
                   </div>
+                    <?php } ?>
                   <div class="col-5 col-md-3 border-bottom border-3">
                     <div class="p-2">Phone</div>
                   </div>
@@ -350,35 +382,37 @@ if (isset($_POST['save-password'])){
                     <label for="email" class="form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" value="<?= $user->email ?>" disabled />
                   </div>
-                  <div class="col-12 col-md-6">
-                    <label for="skill" class="form-label">Skills</label>
-                    <select class="form-select" id="skill" data-placeholder="Choose anything" name="skill" multiple>
-                      <option>Christmas Island</option>
-                      <option>South Sudan</option>
-                      <option>Jamaica</option>
-                      <option>Kenya</option>
-                      <option>French Guiana</option>
-                      <option>Mayotta</option>
-                      <option>Liechtenstein</option>
-                      <option>Denmark</option>
-                      <option>Eritrea</option>
-                      <option>Gibraltar</option>
-                      <option>Saint Helena, Ascension and Tristan da Cunha</option>
-                      <option>Haiti</option>
-                      <option>Namibia</option>
-                      <option>South Georgia and the South Sandwich Islands</option>
-                      <option>Vietnam</option>
-                      <option>Yemen</option>
-                      <option>Philippines</option>
-                      <option>Benin</option>
-                      <option>Czech Republic</option>
-                      <option>Russia</option>
-                    </select>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <label for="job" class="form-label">Job</label>
-                    <input type="text" class="form-control" id="job" name="job" value="<?= $user->job ?>" />
-                  </div>
+                  <?php if ($_SESSION['role'] == 'Coach') { ?>
+                    <div class="col-12 col-md-6">
+                      <label for="skills" class="form-label">Skills</label>
+                      <select class="form-select" id="skills" data-placeholder="Choose anything" name="skills[]" multiple="multiple">
+                        <option>Christmas Island</option>
+                        <option>South Sudan</option>
+                        <option>Jamaica</option>
+                        <option>Kenya</option>
+                        <option>French Guiana</option>
+                        <option>Mayotta</option>
+                        <option>Liechtenstein</option>
+                        <option>Denmark</option>
+                        <option>Eritrea</option>
+                        <option>Gibraltar</option>
+                        <option>Saint Helena, Ascension and Tristan da Cunha</option>
+                        <option>Haiti</option>
+                        <option>Namibia</option>
+                        <option>South Georgia and the South Sandwich Islands</option>
+                        <option>Vietnam</option>
+                        <option>Yemen</option>
+                        <option>Philippines</option>
+                        <option>Benin</option>
+                        <option>Czech Republic</option>
+                        <option>Russia</option>
+                      </select>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label for="job" class="form-label">Job</label>
+                      <input type="text" class="form-control" id="job" name="job" value="<?= $user->job ?>" />
+                    </div>
+                  <?php } ?>
                   <div class="col-12">
                     <button type="submit" class="btn btn-primary" name="save-profile" id="save-profile">
                       Save Changes
@@ -386,124 +420,129 @@ if (isset($_POST['save-password'])){
                   </div>
                 </form>
               </div>
-              <?php if ($_SESSION['role'] == 'Coach'){ ?>
-              <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
-                <div class="row gy-3 gy-md-0">
-                  <table class="hover row-border stripe" id="example" style="width:100%">
-                    <thead>
-                      <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($contacts as $contact) :?>
+              <?php if ($_SESSION['role'] == 'Coach') { ?>
+                <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
+                  <div class="row gy-3 gy-md-0">
+                    <table class="hover row-border stripe" id="example" style="width:100%">
+                      <thead>
                         <tr>
-                          <td><?= $contact->fname ?></td>
-                          <td><?= $contact->lname ?></td>
-                          <td><?= $contact->email ?></td>
-                          <td><?= $contact->phone ?></td>
-                          <td>
-                            <form method="POST">
-                              <button class="btn btn-success me-2" id="accept" name="accept" value="<?= $contact->id ?>"><i class="bi bi-check"></i></button>
-                              <button class="btn btn-danger" id="decline" name="decline" value="<?= $contact->id ?>"><i class="bi bi-x"></i></button>
-                            </form>
-                          </td>
+                          <th>First name</th>
+                          <th>Last name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Action</th>
                         </tr>
-                      <?php endforeach; ?>
-                    </tbody>
-                  </table>
-                  <table class="hover row-border stripe" id="example-2" style="width:100%">
-                    <thead>
-                      <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($contactsAccs as $contactsAcc) :?>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($contacts as $contact) : ?>
+                          <tr>
+                            <td><?= $contact->fname ?></td>
+                            <td><?= $contact->lname ?></td>
+                            <td><?= $contact->email ?></td>
+                            <td><?= $contact->phone ?></td>
+                            <td>
+                              <form method="POST">
+                                <button class="btn btn-success me-2" id="accept" name="accept" value="<?= $contact->id ?>"><i class="bi bi-check"></i></button>
+                                <button class="btn btn-danger" id="decline" name="decline" value="<?= $contact->id ?>"><i class="bi bi-x"></i></button>
+                              </form>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                    <table class="hover row-border stripe" id="example-2" style="width:100%">
+                      <thead>
                         <tr>
-                          <td><?= $contactsAcc->fname ?></td>
-                          <td><?= $contactsAcc->lname ?></td>
-                          <td><?= $contactsAcc->email ?></td>
-                          <td><?= $contactsAcc->phone ?></td>
+                          <th>First name</th>
+                          <th>Last name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
                         </tr>
-                      <?php endforeach; ?>
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($contactsAccs as $contactsAcc) : ?>
+                          <tr>
+                            <td><?= $contactsAcc->fname ?></td>
+                            <td><?= $contactsAcc->lname ?></td>
+                            <td><?= $contactsAcc->email ?></td>
+                            <td><?= $contactsAcc->phone ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </div>
 
-              <div class="tab-pane fade" id="detail-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
-                <form method="POST" class="row gy-3 gy-md-0" enctype="multipart/form-data">
-                  <div class="col-12 col-md-12 mb-3">
-                    <label for="price" class="form-label">Prix de base</label>
-                    <div class="input-group">
-                      <span class="input-group-text">€</span>
-                      <input type="text" class="form-control" id="price" name="price" value="<?= $user->prix ?>">
-                      <span class="input-group-text">.00</span>
+                <div class="tab-pane fade" id="detail-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
+                  <form method="POST" class="row gy-3 gy-md-0" enctype="multipart/form-data">
+                    <div class="col-12 col-md-12 mb-3">
+                      <label for="price" class="form-label">Prix de base</label>
+                      <div class="input-group">
+                        <span class="input-group-text">€</span>
+                        <input type="text" class="form-control" id="price" name="price" value="<?= $user->prix ?>">
+                        <span class="input-group-text">.00</span>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-12 col-md-12">
-                    <label for="detail" class="form-label">Description de votre offre</label>
-                    <textarea id="detail" name="detail"><?= $user->detail ?></textarea>
-                  </div>
-                  <div class="row">
-                    <div class="col-12">
-                      <button type="submit" class="btn btn-primary mt-4" name="save-detail">
-                        Save Changes
-                      </button>
+                    <div class="col-12 col-md-12">
+                      <label for="detail" class="form-label">Description de votre offre</label>
+                      <textarea id="detail" name="detail"><?= $user->detail ?></textarea>
                     </div>
-                  </div>
-                </form>
-              </div>
-              <?php }else{ ?>
-              <div class="tab-pane fade" id="coach-tab-pane" role="tabpanel" aria-labelledby="coach-tab" tabindex="0">
-                <div class="row gy-3 gy-md-0">
-                  <table class="hover row-border stripe" id="example" style="width:100%">
-                    <thead>
-                      <tr>
-                        <th>First name</th>
-                        <th>Last name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($contactsClients as $contactsClient) :?>
-                        <tr>
-                          <td><?= $contactsClient->fname ?></td>
-                          <td><?= $contactsClient->lname ?></td>
-                          <td><?= $contactsClient->email ?></td>
-                          <td><?= $contactsClient->phone ?></td>
-                          <td><?php if ($contactsClient->status == 0){ echo '<p class="text-danger">En attante'; }else{ echo '<p class="text-success">Accepter'; } ?></p></td>
-                        </tr>
-                      <?php endforeach; ?>
-                    </tbody>
-                  </table>
+                    <div class="row">
+                      <div class="col-12">
+                        <button type="submit" class="btn btn-primary mt-4" name="save-detail">
+                          Save Changes
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </div>
-              </div>
-              <?php }?>
+              <?php } else { ?>
+                <div class="tab-pane fade" id="coach-tab-pane" role="tabpanel" aria-labelledby="coach-tab" tabindex="0">
+                  <div class="row gy-3 gy-md-0">
+                    <table class="hover row-border stripe" id="example" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>First name</th>
+                          <th>Last name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($contactsClients as $contactsClient) : ?>
+                          <tr>
+                            <td><?= $contactsClient->fname ?></td>
+                            <td><?= $contactsClient->lname ?></td>
+                            <td><?= $contactsClient->email ?></td>
+                            <td><?= $contactsClient->phone ?></td>
+                            <td><?php if ($contactsClient->status == 0) {
+                                  echo '<p class="text-danger">En attante';
+                                } else {
+                                  echo '<p class="text-success">Accepter';
+                                } ?></p>
+                            </td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              <?php } ?>
               <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
                 <form method="POST" enctype="multipart/form-data">
                   <div class="row gy-3 gy-xxl-4">
                     <div class="col-12">
                       <label for="current" class="form-label">Mot de passe courant</label>
-                      <input type="password" class="form-control" id="current" name="current"/>
+                      <input type="password" class="form-control" id="current" name="current" />
                     </div>
                     <div class="col-12">
                       <label for="new" class="form-label">Nouveau mot de passe</label>
-                      <input type="password" class="form-control" id="new" name="new"/>
+                      <input type="password" class="form-control" id="new" name="new" />
                     </div>
                     <div class="col-12">
                       <label for="confirm" class="form-label">Confirmation du mot de passe</label>
-                      <input type="password" class="form-control" id="confirm" name="confirm"/>
+                      <input type="password" class="form-control" id="confirm" name="confirm" />
                     </div>
                     <div class="col-12">
                       <button type="submit" class="btn btn-primary" id="save-password" name="save-password">

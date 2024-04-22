@@ -3,79 +3,20 @@ include_once "core.php";
 include_once "header.php";
 
 use Classes\Coachs\Coach;
-use Classes\Utils\Helper;
 
-if (empty($_GET) || empty($_SESSION)) {
-    header('Location: nos-coachs.php');
+if ($_SESSION['role'] != 'Admin') {
+    header('Location: index.php');
+    exit();
+}
+
+if (empty($_GET)) {
+    header('Location: dashboard.php');
     exit();
 }
 
 $user = new Coach;
 $profil = $user->getCoacheById($_GET['coach']);
 $profil->skills = explode(',',$profil->skills);
-
-if (isset($_POST['submit'])) {
-
-    extract($_POST);
-
-    if ($_SESSION['role'] == 'Client') {
-
-        if (HELPER::checkIfNotExist(1,$_GET['coach'], $submit)) {
-            try {
-
-                $add = new Coach;
-                $add->addCoachClient($_GET['coach'], $submit);
-                $msg = Helper::flushMessage('Coach recruter', 'alert alert-success text-center');
-
-            } catch (Exception $e) {
-                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
-            }
-        } else {
-            try {
-
-                $del = new Coach;
-                $del->deleteCoachClient($_GET['coach'], $submit);
-                $msg = Helper::flushMessage('Recrutment annuler', 'alert alert-success text-center');
-
-            } catch (Exception $e) {
-                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
-            }
-        }
-    } else {
-        $msg = Helper::flushMessage('Il est impossible de vous inscription aux tant que coach', 'alert alert-danger text-center');
-    }
-}
-
-if (isset($_POST['recommend'])){
-    extract($_POST);
-
-    if ($_SESSION['role'] == 'Client') {
-
-        if (HELPER::checkIfNotExist(2,$_GET['coach'], $recommend)) {
-            try {
-
-                $add = new Coach;
-                $add->addRecommend($recommend,$_GET['coach']);
-                $msg = Helper::flushMessage('Coach recommander', 'alert alert-success text-center');
-
-            } catch (Exception $e) {
-                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
-            }
-        } else {
-            try {
-
-                $del = new Coach;
-                $del->deleteRecommend($recommend,$_GET['coach']);
-                $msg = Helper::flushMessage('Recomandation annuler', 'alert alert-success text-center');
-
-            } catch (Exception $e) {
-                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
-            }
-        }
-    } else {
-        $msg = Helper::flushMessage('Il est impossible de recommander aux tant que coach', 'alert alert-danger text-center');
-    }
-}
 
 ?>
 
@@ -108,17 +49,9 @@ if (isset($_POST['recommend'])){
                                                                                     } else {
                                                                                         echo 'FREE';
                                                                                     } ?></h6>
-                                <?= isset($msg) ? $msg : ''; ?>
-                                <div class="text-center">
-                                    <form method="POST" enctype="multipart/form-data">
-                                        <button type="submit" id="submit" name="submit" value="<?= $_SESSION['id'] ?>" class="btn mb-1 w-100 <?php if (HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id'])){echo 'btn-success">Recruter';}else{echo 'btn-danger">Annuler Recrutment';}?></button>
-                                        <button type="submit" id="recommend" name="recommend" value="<?= $_SESSION['id'] ?>" class="btn mb-1 w-100 <?php if (Helper::checkIfNotExist(2,$_GET['coach'], $_SESSION['id'])){echo 'btn-primary">Je recommander';}else{echo 'btn-danger">Annuler recommandation';}?></button>
-                                    </form>
-                                </div>
                             </div>
                         </div>
                     </div>
-                    <?php if (!HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id'])) { ?>
                     <div class="col-12">
                         <div class="card widget-card shadow-sm">
                             <div class="card-header text-bg-primary">Contact</div>
@@ -132,7 +65,6 @@ if (isset($_POST['recommend'])){
                             </div>
                         </div>
                     </div>
-                    <?php } ?>
                     <div class="col-12">
                         <div class="card widget-card shadow-sm">
                             <div class="card-header text-bg-primary">Skills</div>

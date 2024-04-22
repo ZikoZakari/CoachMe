@@ -264,6 +264,7 @@ if (isset($_POST['user-messag-Id'])){
                                 <th>Last Name</th>
                                 <th>Prix</th>
                                 <th>Cv's</th>
+                                <th>Profile</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -273,14 +274,17 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $coach->fname ?></td>
                                     <td><?= $coach->lname ?></td>
                                     <td><?= $coach->prix ?> € / Heure</td>
-                                    <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else {
+                                    <td>
+                                        <?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else {
                                                                                                                                                                                             echo "Pas de cv";
-                                                                                                                                                                                        } ?></td>
+                                                                                                                                                                                        } ?>
+                                    </td>
+                                    <td><a class="btn btn-primary d-flex justify-content-center" href="show.php?coach=<?= $coach->id ?>">Show profile</a></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
                                             <input type="number" id="hide" name="hide" value="" hidden>
                                             <a type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="addValueTo(<?= $coach->id ?>)"><i class="bi bi-chat-dots-fill"></i></a>
-                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>"><i class="bi bi-check"></button>
+                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>"><i class="bi bi-check"></i></button>
                                         </form>
                                     </td>
                                 </tr>

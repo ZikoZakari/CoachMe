@@ -2,7 +2,6 @@
 include_once "core.php";
 
 use Classes\Coachs\Coach;
-use Classes\Utils\Helper;
 
 $coaches = new Coach();
 $coachs = $coaches->coaches();
@@ -32,35 +31,39 @@ include_once "header.php";
             </div>
         </div> -->
         <div class="row gx-4 gx-lg-4 row-cols-1 row-cols-md-3 row-cols-xl-4">
-            <?php foreach ($coachs as $coach) :?>
-            <div class="col mb-5">
-                <div class="card h-100 rounded-5 shadow-lg">
-                    <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (<?= $coach->recommend ?>)</div>
-                    <img class="card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) { echo 'uploads/img/'.$coach->pictur; }else{ echo 'images/profile-img-1.jpg'; } ?>" alt="..." />
-                    <div class="card-body mt-3">
-                        <div class="text-center">
-                            <h5 class="fw-bolder"><?= $coach->fname.' '.$coach->lname ?></h5>
-                            Enseignant de kundalin yoga à domicile sur lille sa région <!--<?= $coach->job ?> -->
+            <?php foreach ($coachs as $coach) :
+                $coach->skills = explode(',', $coach->skills);; ?>
+                <div class="col mb-5">
+                    <div class="card h-100 rounded-5 shadow-lg">
+                        <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (<?= $coach->recommend ?>)</div>
+                        <img class="card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) {
+                                                                                    echo 'uploads/img/' . $coach->pictur;
+                                                                                } else {
+                                                                                    echo 'images/profile-img-1.jpg';
+                                                                                } ?>" alt="..." />
+                        <div class="card-body mt-3">
+                            <div class="text-center">
+                                <h5 class="fw-bolder"><?= $coach->fname . ' ' . $coach->lname ?></h5>
+                                Enseignant de kundalin yoga à domicile sur lille sa région <!--<?= $coach->job ?> -->
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-black-50 rounded-5">
-                        <div class="text-center mt-2">
-                            <h6 class="fw-bolder">A partir de</h6>
-                            <h6 class="fw-bolder text-success"><?php if ($coach->prix != NULL){ echo $coach->prix.'€ / heure'; }else{ echo 'FREE'; } ?></h6>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-black-50 rounded-5">
+                            <div class="text-center mt-2">
+                                <h6 class="fw-bolder">A partir de</h6>
+                                <h6 class="fw-bolder text-success"><?php if ($coach->prix != NULL) {
+                                                                        echo $coach->prix . '€ / heure';
+                                                                    } else {
+                                                                        echo 'FREE';
+                                                                    } ?></h6>
+                            </div>
+                            <?php foreach ($coach->skills as $skill) : ?>
+                                <span class="badge text-bg-primary"><?= $skill ?></span>
+                            <?php endforeach; ?>
+                            <div class="text-center mt-3"><a class="btn btn-outline-dark mt-auto" href="coach.php?coach=<?= $coach->id ?>">View profile</a></div>
                         </div>
-                        <span class="badge text-bg-primary">HTML</span>
-                        <span class="badge text-bg-primary">SCSS</span>
-                        <span class="badge text-bg-primary">Javascript</span>
-                        <span class="badge text-bg-primary">React</span>
-                        <span class="badge text-bg-primary">Vue</span>
-                        <span class="badge text-bg-primary">Angular</span>
-                        <span class="badge text-bg-primary">UI</span>
-                        <span class="badge text-bg-primary">UX</span>
-                        <div class="text-center mt-3"><a class="btn btn-outline-dark mt-auto" href="coach.php?coach=<?= $coach->id ?>">View profile</a></div>
                     </div>
                 </div>
-            </div>
-            <?php endforeach;?>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
