@@ -205,4 +205,11 @@ class User{
         $stmt = $db->prepare($sql);
         $stmt->execute([$id]);
     }
+
+    public function deleteRecommend($id){
+        $sql = "DELETE FROM recommend WHERE (id_coach = ? OR id_client = ?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id,$id]);
+    }
 }

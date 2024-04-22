@@ -183,6 +183,11 @@ class Helper
             $stmt = $db->prepare($sql);
             $stmt->execute([$id,$id]);
         }
+        if($table = 3){
+            $sql = "SELECT id FROM recommend WHERE (id_coach = ? OR id_client = ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$id,$id]);
+        }
 
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
 

@@ -70,23 +70,24 @@ if (isset($_POST['userId'])) {
         if (Helper::checkIfLinkExist(1, $userId)) {
 
             $delete->deleteUserLinkDetails($userId);
-
         }
 
         if (Helper::checkIfLinkExist(2, $userId)) {
 
             $delete->deleteUserLinkCoach_client($userId);
-
         }
 
         if (!Helper::messagNotExist($userId)){
 
             $delete->deleteAlertMessage($userId);
+        }
 
+        if (Helper::checkIfLinkExist(3,$userId)){
+
+            $delete->deleteRecommend($userId);
         }
 
         $delete->deleteUser($userId);
-
         $msgDeleteUser =  Helper::flushMessage('User delete', 'alert alert-success text-center');
 
     } catch (Exception $e) {
