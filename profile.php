@@ -153,7 +153,7 @@ if (isset($_POST['accept'])) {
   try {
 
     $acc = new User;
-    $acc->updateCoachClientStatus($accept);
+    $acc->updateCoachClientStatus($accept,$_SESSION['id']);
     echo $msgCont = Helper::flushMessage("Demande accepter", "alert alert-success text-center");
   } catch (Exception $e) {
 
@@ -168,7 +168,7 @@ if (isset($_POST['decline'])) {
   try {
 
     $dec = new User;
-    $dec->deleteCoachClientStatus($decline);
+    $dec->deleteCoachClientStatus($decline,$_SESSION['id']);
     echo $msgCont = Helper::flushMessage("Demande décliner", "alert alert-success text-center");
   } catch (Exception $e) {
 

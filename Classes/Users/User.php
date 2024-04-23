@@ -158,19 +158,19 @@ class User{
         $stmt->execute([$pass,$id]);
     }
 
-    public function updateCoachClientStatus($id){
-        $sql = "UPDATE coach_client SET status = '1' WHERE id_client = ? ";
+    public function updateCoachClientStatus($id_client,$id_coach){
+        $sql = "UPDATE coach_client SET status = '1' WHERE id_client = ? AND i_coach = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
 
-        $stmt->execute([$id]);
+        $stmt->execute([$id_client,$id_coach]);
     }
 
-    public function deleteCoachClientStatus($id){
-        $sql = "DELETE FROM coach_client WHERE id_client = ? ";
+    public function deleteCoachClientStatus($id_client,$id_coach){
+        $sql = "DELETE FROM coach_client WHERE id_client = ? AND id_coach = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute([$id_client,$id_coach]);
     }
 
     public function sendMessageAlert($title,$messag,$id){
