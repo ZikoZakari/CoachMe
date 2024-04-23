@@ -207,4 +207,12 @@ class Helper
             return true;
         return false;
     }
+
+    public static function stringLimiter($string,$max){
+        if(strlen($string) <= $max){
+            return $string;
+        }else if (strlen($string) > $max){
+            return substr($string,0,$max) . " ...";
+        }
+    }
 }

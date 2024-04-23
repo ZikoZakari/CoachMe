@@ -111,4 +111,13 @@ class Coach{
 
         $stmt->execute([$id_coach,$id_client]);
     }
+
+    public function getCoache(){
+        $sql = "SELECT id, fname, lname, pictur, about FROM users WHERE role = 'Coach' AND status = '1' LIMIT 3";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
 }

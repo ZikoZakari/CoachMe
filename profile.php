@@ -135,7 +135,7 @@ if (isset($_POST['save-detail'])) {
 
       $detail = new User();
       $detail->details($price, $_POST['detail'], $_SESSION['id']);
-      echo $msg = Helper::flushMessage("Detaile modifier avec succès", "alert alert-danger text-center");
+      echo $msg = Helper::flushMessage("Detaile modifier avec succès", "alert alert-success text-center");
     } catch (Exception $e) {
 
       echo $msg = Helper::flushMessage("ERROR", "alert alert-danger text-center");
@@ -385,8 +385,11 @@ if (isset($_POST['save-password'])) {
                   <?php if ($_SESSION['role'] == 'Coach') { ?>
                     <div class="col-12 col-md-6">
                       <label for="skills" class="form-label">Skills</label>
-                      <select class="form-select" id="skills" data-placeholder="Choose anything" name="skills[]" multiple="multiple">
-                        <option>Christmas Island</option>
+                      <select class="form-select" id="skills" data-placeholder="" name="skills[]" multiple="multiple">
+                        <?php foreach($user->skills as $skill): ?>
+                          <option selected><?= $skill ?></option>
+                        <?php endforeach; ?>
+                        <!-- <option>Christmas Island</option>
                         <option>South Sudan</option>
                         <option>Jamaica</option>
                         <option>Kenya</option>
@@ -405,7 +408,7 @@ if (isset($_POST['save-password'])) {
                         <option>Philippines</option>
                         <option>Benin</option>
                         <option>Czech Republic</option>
-                        <option>Russia</option>
+                        <option>Russia</option> -->
                       </select>
                     </div>
                     <div class="col-12 col-md-6">
