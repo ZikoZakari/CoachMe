@@ -6,63 +6,66 @@ use Classes\Newsletter\Newslatter;
 use Classes\Utils\Helper;
 
 $coaches = new Coach();
-$coachs = $coaches->coaches();
+if (isset($_POST['search'])) {
+    extract($_POST);
+    if ($search == 'free') { 
+        $search = 0;
+    }
+    $coachs = $coaches->search($search);
+}else{
+    $coachs = $coaches->coaches();
+}
 
 include_once "header.php";
 
-if(isset($_POST['nl-sub']))
-{
+if (isset($_POST['nl-sub'])) {
     extract($_POST);
-    if(!empty($nlEmail))
-    {
-        if(Helper::validateEmail($nlEmail))
-        {
+    if (!empty($nlEmail)) {
+        if (Helper::validateEmail($nlEmail)) {
             // get ip
             $ip = $_SERVER['REMOTE_ADDR'];
 
-            try{
+            try {
                 $newslatter = new Newslatter();
-                $newslatter->add($nlEmail,$ip);
-                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès","alert alert-success text-center");
+                $newslatter->add($nlEmail, $ip);
+                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
+            } catch (Exception $e) {
+                $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
             }
-            catch(Exception $e)
-            {
-                $nlMsg = Helper::flushMessage("Erreur de l'abonnement","alert alert-danger text-center");
-            }
-            
-        }
-        else
-        {
-            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement","alert alert-danger text-center");
+        } else {
+            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
         }
     }
 }
 ?>
 
-<header class="bg-dark py-5">
+<header class="bg-dark py-4">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
             <h1 class="display-4 fw-bolder">Nos Coachs</h1>
             <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+        </div>
+        <div class="mt-5 d-flex justify-content-center">
+            <form method="POST">
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1">
+                        <svg width="20" height="20" fill="currentColor" class="bi bi-search">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                        </svg>
+                    </span>
+                    <input type="text" class="form-control" id="search" name="search" placeholder="Search" onchange="this.form.submit()">
+                </div>
+            </form>
         </div>
     </div>
 </header>
 <section class="py-5">
 
     <div class="container px-4 px-lg-5">
-        <!-- <div class="col-md-3 mb-5">
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
-                    </svg>
-                </span>
-                <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
-            </div>
-        </div> -->
         <div class="row gx-4 gx-lg-4 row-cols-1 row-cols-md-3 row-cols-xl-4">
             <?php foreach ($coachs as $coach) :
-                $coach->skills = explode(',', $coach->skills);; ?>
+                $coach->skills = explode(',', $coach->skills);
+                $coach->about = Helper::stringLimiter($coach->about, 90); ?>
                 <div class="col mb-5">
                     <div class="card h-100 rounded-5 shadow-lg">
                         <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (<?= $coach->recommend ?>)</div>
@@ -74,7 +77,7 @@ if(isset($_POST['nl-sub']))
                         <div class="card-body mt-3">
                             <div class="text-center">
                                 <h5 class="fw-bolder"><?= $coach->fname . ' ' . $coach->lname ?></h5>
-                                Enseignant de kundalin yoga à domicile sur lille sa région <!--<?= $coach->job ?> -->
+                                <?= $coach->about ?>
                             </div>
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-black-50 rounded-5">
@@ -165,7 +168,7 @@ if(isset($_POST['nl-sub']))
 
             <div class="col-md-5 offset-md-1 mb-3">
                 <form method="POST">
-                    <?= isset($nlMsg) ? $nlMsg : '' ;?>
+                    <?= isset($nlMsg) ? $nlMsg : ''; ?>
                     <h5>Subscribe to our newsletter</h5>
                     <p>Monthly digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">

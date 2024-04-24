@@ -321,7 +321,7 @@ if (isset($_POST['user-messag-Id'])){
                         <h1 class="h2">Messages d'alerte envoyer</h1>
                     </div>
                     <?= isset($msgDeleteAlert) ? $msgDeleteAlert : '' ;?>
-                    <table class="hover row-border stripe" id="users" style="width:100%">
+                    <table class="hover row-border stripe" id="messageAlert" style="width:100%">
                         <thead>
                             <tr>
                                 <th>First Name</th>
@@ -370,7 +370,7 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $user->lname ?></td>
                                     <td><?= $user->email ?></td>
                                     <td><?= $user->role ?></td>
-                                    <td><?php if ($user->status == 0) { echo 'En attente'; }else{ if($user->status == 1) { echo 'Actif'; } } ?></td>
+                                    <td><?php if ($user->role == 'Coach'){ if ($user->status == 0) { echo 'En attente'; }else{ if($user->status == 1) { echo 'Actif'; } } }else{ echo '-'; } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
                                             <button type="submit" class="btn btn-danger w-100 me-1" id="userId" name="userId" value="<?= $user->id ?>"><i class="bi bi-trash"></i></button>

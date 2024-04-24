@@ -7,13 +7,14 @@ use PDO;
 
 class Coach{
     public function coaches(){
-        $sql = "SELECT U.id, U.fname, U.lname, U.job, U.pictur, D.prix, U.skills, (SELECT COUNT(*) FROM recommend R WHERE R.id_coach = U.id) AS recommend FROM users U 
+        $sql = "SELECT U.id, U.fname, U.lname, U.job, U.pictur, D.prix, U.skills, U.about, (SELECT COUNT(*) FROM recommend R WHERE R.id_coach = U.id) AS recommend FROM users U 
         LEFT JOIN details D
         ON U.id = D.id_user
         LEFT JOIN recommend R
         ON D.id_user = R.id_coach
         WHERE U.role = 'Coach' AND U.status = '1'
-        GROUP BY U.id";
+        GROUP BY U.id
+        ORDER BY recommend DESC";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -42,34 +43,21 @@ class Coach{
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
-
     
-    public function getAllContact($id){
-        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach FROM users U
+    public function getMyClient($id,$status){
+        $sql = "SELECT C.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach, C.date FROM users U
         LEFT JOIN coach_client C
         ON U.id = C.id_client
-        WHERE C.id_coach = ? AND C.status = '0'";
+        WHERE C.id_coach = ? AND C.status = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->execute([$id]);
-        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
-        return $rows;
-    }
-    
-    public function getAllAcceptedContact($id){
-        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach FROM users U
-        LEFT JOIN coach_client C
-        ON U.id = C.id_client
-        WHERE C.id_coach = ? AND C.status = '1'";
-        $db = (new Db())->getConnection();
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute([$id,$status]);
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
     
     public function getAllContactCoach($id){
-        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach FROM users U
+        $sql = "SELECT U.id, U.fname, U.lname, U.email, U.phone, C.status, U.role, C.id_coach, C.date FROM users U
         LEFT JOIN coach_client C
         ON U.id = C.id_coach
         WHERE C.id_client = ? ";
@@ -97,7 +85,7 @@ class Coach{
     }
 
     public function addCoachClient($id_coach,$id_client){
-        $sql = "INSERT INTO coach_client(id_coach,id_client) VALUES (?,?)";
+        $sql = "INSERT INTO coach_client(id_coach,id_client,date) VALUES (?,?,NOW())";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
 
@@ -113,10 +101,37 @@ class Coach{
     }
 
     public function getCoache(){
-        $sql = "SELECT id, fname, lname, pictur, about FROM users WHERE role = 'Coach' AND status = '1' LIMIT 3";
+        $sql = "SELECT U.id, U.fname, U.lname, U.pictur, U.about, (SELECT COUNT(*) FROM recommend R WHERE U.id = R.id_coach) AS recom 
+        FROM users U
+        WHERE U.role = 'Coach' AND U.status = '1'
+        ORDER BY recom DESC LIMIT 3";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        return $rows;
+    }
+
+    public function deleteCoachClientByStatus($id_coach,$id_client){
+        $sql = "DELETE FROM coach_client WHERE id = (SELECT id FROM coach_client WHERE id_coach = ? AND id_client = ? ORDER BY id DESC LIMIT 1)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id_coach,$id_client]);
+    }
+
+    public function search($search){
+        $sql = "SELECT U.id, U.fname, U.lname, U.job, U.pictur, D.prix, U.skills, U.about, (SELECT COUNT(*) FROM recommend R WHERE R.id_coach = U.id) AS recommend FROM users U 
+        LEFT JOIN details D
+        ON U.id = D.id_user
+        LEFT JOIN recommend R
+        ON D.id_user = R.id_coach
+        WHERE U.role = 'Coach' AND U.status = '1' AND ((skills LIKE ?) OR (fname LIKE ?) OR (lname LIKE ?))
+        GROUP BY U.id
+        ORDER BY recommend DESC";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute(['%'.$search.'%','%'.$search.'%','%'.$search.'%']);
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }

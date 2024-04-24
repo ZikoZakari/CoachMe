@@ -111,7 +111,7 @@ if(isset($_POST['nl-sub']))
 
   <div class="container marketing">
     <div class="text-center mb-5">
-      <h1 class="fw-normal">Nos coachs</h1>
+      <h1 class="fw-normal">Top coachs</h1>
     </div>
     <!-- Three columns of text below the carousel -->
     <div class="row">
@@ -124,11 +124,9 @@ if(isset($_POST['nl-sub']))
         <p>
         <?= $coach->about ?>
         </p>
-        <?php if(!empty($_SESSION)){ ?>
         <p>
           <a class="btn btn-secondary" href="coach.php?coach=<?= $coach->id ?>">View details &raquo;</a>
         </p>
-        <?php } ?>
       </div>
       <?php endforeach; ?>
       

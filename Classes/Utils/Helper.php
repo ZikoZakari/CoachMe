@@ -169,6 +169,18 @@ class Helper
         return false;
     }
 
+    public static function checkCoachClientStatus($id_coach,$id_client,$status){
+        $sql = "SELECT id FROM coach_client WHERE id_coach = ? AND id_client = ? AND status = ? ORDER BY id LIMIT 1";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id_coach,$id_client,$status]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return false;
+        return true;
+    }
+
     public static function checkIfLinkExist($table,$id){
 
         $db = (new Db())->getConnection();

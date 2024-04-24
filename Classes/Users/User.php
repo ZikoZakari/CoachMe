@@ -158,12 +158,12 @@ class User{
         $stmt->execute([$pass,$id]);
     }
 
-    public function updateCoachClientStatus($id_client,$id_coach){
-        $sql = "UPDATE coach_client SET status = '1' WHERE id_client = ? AND i_coach = ?";
+    public function updateCoachClientStatus($id){
+        $sql = "UPDATE coach_client SET status = '1' WHERE id = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
 
-        $stmt->execute([$id_client,$id_coach]);
+        $stmt->execute([$id]);
     }
 
     public function deleteCoachClientStatus($id_client,$id_coach){
@@ -211,5 +211,13 @@ class User{
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute([$id,$id]);
+    }
+
+    public function updateStatusCoachClient($id){
+        $sql = "UPDATE coach_client SET status = '2' WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
+        $stmt->execute([$id]);
     }
 }

@@ -24,8 +24,10 @@ $user = $user->get_user_info($_SESSION['id'], $_SESSION['role']);
 $user->skills = explode(',',$user->skills);
 
 $coach = new Coach;
-$contacts = $coach->getAllContact($_SESSION['id']);
-$contactsAccs = $coach->getAllAcceptedContact($_SESSION['id']);
+$contacts = $coach->getMyClient($_SESSION['id'],0);
+$contactsAccs = $coach->getMyClient($_SESSION['id'],1);
+$contactsRefs = $coach->getMyClient($_SESSION['id'],2);
+
 $contactsClients = $coach->getAllContactCoach($_SESSION['id']);
 
 
@@ -153,7 +155,7 @@ if (isset($_POST['accept'])) {
   try {
 
     $acc = new User;
-    $acc->updateCoachClientStatus($accept,$_SESSION['id']);
+    $acc->updateCoachClientStatus($accept);
     echo $msgCont = Helper::flushMessage("Demande accepter", "alert alert-success text-center");
   } catch (Exception $e) {
 
@@ -168,7 +170,7 @@ if (isset($_POST['decline'])) {
   try {
 
     $dec = new User;
-    $dec->deleteCoachClientStatus($decline,$_SESSION['id']);
+    $dec->updateStatusCoachClient($decline);
     echo $msgCont = Helper::flushMessage("Demande décliner", "alert alert-success text-center");
   } catch (Exception $e) {
 
@@ -426,6 +428,7 @@ if (isset($_POST['save-password'])) {
               <?php if ($_SESSION['role'] == 'Coach') { ?>
                 <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="detail-tab" tabindex="0">
                   <div class="row gy-3 gy-md-0">
+                    <h3>Demande</h3>
                     <table class="hover row-border stripe" id="example" style="width:100%">
                       <thead>
                         <tr>
@@ -433,6 +436,7 @@ if (isset($_POST['save-password'])) {
                           <th>Last name</th>
                           <th>Email</th>
                           <th>Phone</th>
+                          <th>Date</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -443,6 +447,7 @@ if (isset($_POST['save-password'])) {
                             <td><?= $contact->lname ?></td>
                             <td><?= $contact->email ?></td>
                             <td><?= $contact->phone ?></td>
+                            <td><?= $contact->date ?></td>
                             <td>
                               <form method="POST">
                                 <button class="btn btn-success me-2" id="accept" name="accept" value="<?= $contact->id ?>"><i class="bi bi-check"></i></button>
@@ -453,6 +458,7 @@ if (isset($_POST['save-password'])) {
                         <?php endforeach; ?>
                       </tbody>
                     </table>
+                    <h3 class="mt-5">Mes client</h3>
                     <table class="hover row-border stripe" id="example-2" style="width:100%">
                       <thead>
                         <tr>
@@ -460,6 +466,7 @@ if (isset($_POST['save-password'])) {
                           <th>Last name</th>
                           <th>Email</th>
                           <th>Phone</th>
+                          <th>Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -469,6 +476,30 @@ if (isset($_POST['save-password'])) {
                             <td><?= $contactsAcc->lname ?></td>
                             <td><?= $contactsAcc->email ?></td>
                             <td><?= $contactsAcc->phone ?></td>
+                            <td><?= $contactsAcc->date ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      </tbody>
+                    </table>
+                    <h3 class="mt-5">Demande refuser</h3>
+                    <table class="hover row-border stripe" id="example-3" style="width:100%">
+                      <thead>
+                        <tr>
+                          <th>First name</th>
+                          <th>Last name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($contactsRefs as $contactsRef) : ?>
+                          <tr>
+                            <td><?= $contactsRef->fname ?></td>
+                            <td><?= $contactsRef->lname ?></td>
+                            <td><?= $contactsRef->email ?></td>
+                            <td><?= $contactsRef->phone ?></td>
+                            <td><?= $contactsRef->date ?></td>
                           </tr>
                         <?php endforeach; ?>
                       </tbody>
@@ -507,9 +538,9 @@ if (isset($_POST['save-password'])) {
                         <tr>
                           <th>First name</th>
                           <th>Last name</th>
-                          <th>Email</th>
-                          <th>Phone</th>
+                          <th>Profile</th>
                           <th>Status</th>
+                          <th>Date</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -517,14 +548,18 @@ if (isset($_POST['save-password'])) {
                           <tr>
                             <td><?= $contactsClient->fname ?></td>
                             <td><?= $contactsClient->lname ?></td>
-                            <td><?= $contactsClient->email ?></td>
-                            <td><?= $contactsClient->phone ?></td>
+                            <td><a class="btn btn-primary" href="coach.php?coach=<?= $contactsClient->id ?>">View profile</a></td>
                             <td><?php if ($contactsClient->status == 0) {
-                                  echo '<p class="text-danger">En attante';
-                                } else {
-                                  echo '<p class="text-success">Accepter';
+                                  echo '<p>En attante';
+                                } else { 
+                                  if ($contactsClient->status == 1){
+                                    echo '<p class="text-success">Accepter';
+                                  }else{
+                                    echo '<p class="text-danger">Refuser';
+                                  }
                                 } ?></p>
                             </td>
+                            <td><?= $contactsClient->date ?></td>
                           </tr>
                         <?php endforeach; ?>
                       </tbody>
