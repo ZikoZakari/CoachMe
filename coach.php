@@ -5,13 +5,16 @@ include_once "header.php";
 use Classes\Coachs\Coach;
 use Classes\Utils\Helper;
 
-if (empty($_GET) || empty($_SESSION)) {
+if (empty($_GET)) {
     header('Location: nos-coachs.php');
     exit();
 }
 
 $user = new Coach;
 $profil = $user->getCoacheById($_GET['coach']);
+$profil->skills = explode(',',$profil->skills);
+
+// var_dump(HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id']));
 
 if (isset($_POST['submit'])) {
 
@@ -19,18 +22,26 @@ if (isset($_POST['submit'])) {
 
     if ($_SESSION['role'] == 'Client') {
 
-        if (HELPER::checkIfNotExist(1,$_GET['coach'], $submit)) {
+        if (HELPER::checkIfNotExist(1,$_GET['coach'], $submit) || (HELPER::checkCoachClientStatus($_GET['coach'], $submit,2) && !HELPER::checkCoachClientStatus($_GET['coach'], $submit,0) && !HELPER::checkCoachClientStatus($_GET['coach'], $submit,1))) {
             try {
 
                 $add = new Coach;
                 $add->addCoachClient($_GET['coach'], $submit);
-                $msg = Helper::flushMessage('DONE', 'alert alert-success text-center');
+                $msg = Helper::flushMessage('Coach recruter', 'alert alert-success text-center');
 
             } catch (Exception $e) {
                 $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
             }
         } else {
-            $msg = Helper::flushMessage('Existe deja', 'alert alert-danger text-center');
+            try {
+
+                $del = new Coach;
+                $del->deleteCoachClientByStatus($_GET['coach'], $submit);
+                $msg = Helper::flushMessage('Recrutment annuler', 'alert alert-success text-center');
+
+            } catch (Exception $e) {
+                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
+            }
         }
     } else {
         $msg = Helper::flushMessage('Il est impossible de vous inscription aux tant que coach', 'alert alert-danger text-center');
@@ -47,13 +58,21 @@ if (isset($_POST['recommend'])){
 
                 $add = new Coach;
                 $add->addRecommend($recommend,$_GET['coach']);
-                $msg = Helper::flushMessage('DONE', 'alert alert-success text-center');
+                $msg = Helper::flushMessage('Coach recommander', 'alert alert-success text-center');
 
             } catch (Exception $e) {
                 $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
             }
         } else {
-            $msg = Helper::flushMessage('Deja Recommander', 'alert alert-danger text-center');
+            try {
+
+                $del = new Coach;
+                $del->deleteRecommend($recommend,$_GET['coach']);
+                $msg = Helper::flushMessage('Recomandation annuler', 'alert alert-success text-center');
+
+            } catch (Exception $e) {
+                $msg = Helper::flushMessage('ERREUR', 'alert alert-danger text-center');
+            }
         }
     } else {
         $msg = Helper::flushMessage('Il est impossible de recommander aux tant que coach', 'alert alert-danger text-center');
@@ -91,17 +110,24 @@ if (isset($_POST['recommend'])){
                                                                                     } else {
                                                                                         echo 'FREE';
                                                                                     } ?></h6>
-                                <?= isset($msg) ? $msg : ''; ?>
-                                <div class="text-center">
-                                    <form method="POST" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-success mb-1 w-100" id="submit" name="submit" value="<?= $_SESSION['id'] ?>">Recuter</button>
-                                        <button type="submit" class="btn btn-primary mb-1 w-100" id="recommend" name="recommend" value="<?= $_SESSION['id'] ?>">Je recommander</button>
-                                    </form>
-                                </div>
+                                <?= isset($msg) ? $msg : '';
+                                if(!empty($_SESSION)){ ?>
+                                    <div class="text-center">
+                                        <form method="POST" enctype="multipart/form-data">
+                                            <button type="submit" id="submit" name="submit" value="<?= $_SESSION['id'] ?>" class="btn mb-1 w-100 <?php if (HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id']) || (HELPER::checkCoachClientStatus($_GET['coach'], $_SESSION['id'], 2) && !HELPER::checkCoachClientStatus($_GET['coach'], $_SESSION['id'], 0) && !HELPER::checkCoachClientStatus($_GET['coach'], $_SESSION['id'], 1))){echo 'btn-success">Recruter';}else{ echo 'btn-danger">Annuler Recrutment'; }?></button>
+                                            <?php if (HELPER::checkCoachClientStatus($_GET['coach'],$_SESSION['id'],1)){ ?>
+                                                <button type="submit" id="recommend" name="recommend" value="<?= $_SESSION['id'] ?>" class="btn mb-1 w-100 <?php if (Helper::checkIfNotExist(2,$_GET['coach'], $_SESSION['id'])){echo 'btn-primary">Je recommander';}else{echo 'btn-danger">Annuler recommandation';}?></button>
+                                            <?php } ?>
+                                        </form>
+                                    </div>
+                                <?php }else{ ?>
+                                    <a class="btn mb-1 w-100 btn-success" href="login.php">Recruter</a>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
-                    <?php if (!HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id'])) { ?>
+                    <?php if (!empty($_SESSION)){
+                        if (HELPER::checkCoachClientStatus($_GET['coach'], $_SESSION['id'],1)) { ?>
                     <div class="col-12">
                         <div class="card widget-card shadow-sm">
                             <div class="card-header text-bg-primary">Contact</div>
@@ -115,19 +141,15 @@ if (isset($_POST['recommend'])){
                             </div>
                         </div>
                     </div>
-                    <?php } ?>
+                    <?php }
+                        } ?>
                     <div class="col-12">
                         <div class="card widget-card shadow-sm">
                             <div class="card-header text-bg-primary">Skills</div>
                             <div class="card-body">
-                                <span class="badge text-bg-primary">HTML</span>
-                                <span class="badge text-bg-primary">SCSS</span>
-                                <span class="badge text-bg-primary">Javascript</span>
-                                <span class="badge text-bg-primary">React</span>
-                                <span class="badge text-bg-primary">Vue</span>
-                                <span class="badge text-bg-primary">Angular</span>
-                                <span class="badge text-bg-primary">UI</span>
-                                <span class="badge text-bg-primary">UX</span>
+                            <?php foreach($profil->skills as $skill): ?>
+                                <span class="badge text-bg-primary"><?= $skill ?></span>
+                            <?php endforeach; ?>
                             </div>
                         </div>
                     </div>

@@ -49,14 +49,15 @@ if (isset($_POST['accept'])) {
     try{
         $profil = new User;
         $profil->updateStatusUser($accept);
+        if (!Helper::messagNotExist($accept)){
+            $profil->deleteAlertMessage($accept);
+        }
         $msgDash = Helper::flushMessage('Utilisateur autorisé','alert alert-success text-center');
     } catch (Exception $e){
         $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center');
     }
     
-    // if (Helper::messagNotExist($accept)){
-        
-    // }
+    // 
 }
 
 if (isset($_POST['userId'])) {
@@ -69,17 +70,24 @@ if (isset($_POST['userId'])) {
         if (Helper::checkIfLinkExist(1, $userId)) {
 
             $delete->deleteUserLinkDetails($userId);
-
         }
 
         if (Helper::checkIfLinkExist(2, $userId)) {
 
             $delete->deleteUserLinkCoach_client($userId);
+        }
 
+        if (!Helper::messagNotExist($userId)){
+
+            $delete->deleteAlertMessage($userId);
+        }
+
+        if (Helper::checkIfLinkExist(3,$userId)){
+
+            $delete->deleteRecommend($userId);
         }
 
         $delete->deleteUser($userId);
-
         $msgDeleteUser =  Helper::flushMessage('User delete', 'alert alert-success text-center');
 
     } catch (Exception $e) {
@@ -256,6 +264,7 @@ if (isset($_POST['user-messag-Id'])){
                                 <th>Last Name</th>
                                 <th>Prix</th>
                                 <th>Cv's</th>
+                                <th>Profile</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -265,14 +274,17 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $coach->fname ?></td>
                                     <td><?= $coach->lname ?></td>
                                     <td><?= $coach->prix ?> € / Heure</td>
-                                    <td><?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else {
+                                    <td>
+                                        <?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else {
                                                                                                                                                                                             echo "Pas de cv";
-                                                                                                                                                                                        } ?></td>
+                                                                                                                                                                                        } ?>
+                                    </td>
+                                    <td><a class="btn btn-primary d-flex justify-content-center" href="show.php?coach=<?= $coach->id ?>">Show profile</a></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
                                             <input type="number" id="hide" name="hide" value="" hidden>
                                             <a type="button" class="btn btn-danger w-100 me-1" id="messag" name="messag" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="addValueTo(<?= $coach->id ?>)"><i class="bi bi-chat-dots-fill"></i></a>
-                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>"><i class="bi bi-check"></button>
+                                            <button type="submit" class="btn btn-success w-100 ms-1" id="accept" name="accept" value="<?= $coach->id ?>"><i class="bi bi-check"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -309,7 +321,7 @@ if (isset($_POST['user-messag-Id'])){
                         <h1 class="h2">Messages d'alerte envoyer</h1>
                     </div>
                     <?= isset($msgDeleteAlert) ? $msgDeleteAlert : '' ;?>
-                    <table class="hover row-border stripe" id="users" style="width:100%">
+                    <table class="hover row-border stripe" id="messageAlert" style="width:100%">
                         <thead>
                             <tr>
                                 <th>First Name</th>
@@ -328,7 +340,7 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $messagUser->title ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
-                                            <button type="submit" class="btn btn-danger w-100 me-1" id="user-messag-Id" name="user-messag-Id" value="<?= $messagUser->id ?>"><i class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-danger w-100 me-1" id="user-messag-Id" name="user-messag-Id" value="<?= $messagUser->id_user ?>"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -358,7 +370,7 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $user->lname ?></td>
                                     <td><?= $user->email ?></td>
                                     <td><?= $user->role ?></td>
-                                    <td><?php if ($user->status == 0) { echo 'En attente'; }else{ if($user->status == 1) { echo 'Actif'; } } ?></td>
+                                    <td><?php if ($user->role == 'Coach'){ if ($user->status == 0) { echo 'En attente'; }else{ if($user->status == 1) { echo 'Actif'; } } }else{ echo '-'; } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
                                             <button type="submit" class="btn btn-danger w-100 me-1" id="userId" name="userId" value="<?= $user->id ?>"><i class="bi bi-trash"></i></button>

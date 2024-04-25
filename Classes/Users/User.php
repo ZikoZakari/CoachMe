@@ -91,12 +91,12 @@ class User{
         return $rows;
     }
 
-    public function updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $id){
-        $sql = "UPDATE users SET fname = ?, lname = ?, about = ?, address = ?, city = ?, phone = ?, job = ? WHERE id = ?";
+    public function updateUser($fname, $lname, $about, $adress, $city, $phone, $job, $skills, $id){
+        $sql = "UPDATE users SET fname = ?, lname = ?, about = ?, address = ?, city = ?, phone = ?, job = ?, skills = ? WHERE id = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
 
-        $stmt->execute([$fname, $lname, $about, $adress, $city, $phone, $job, $id]);
+        $stmt->execute([$fname, $lname, $about, $adress, $city, $phone, $job, $skills, $id]);
     }
 
     public function updateFile($file, $id, $type){
@@ -159,18 +159,18 @@ class User{
     }
 
     public function updateCoachClientStatus($id){
-        $sql = "UPDATE coach_client SET status = '1' WHERE id_client = ? ";
+        $sql = "UPDATE coach_client SET status = '1' WHERE id = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
 
         $stmt->execute([$id]);
     }
 
-    public function deleteCoachClientStatus($id){
-        $sql = "DELETE FROM coach_client WHERE id_client = ? ";
+    public function deleteCoachClientStatus($id_client,$id_coach){
+        $sql = "DELETE FROM coach_client WHERE id_client = ? AND id_coach = ?";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
-        $stmt->execute([$id]);
+        $stmt->execute([$id_client,$id_coach]);
     }
 
     public function sendMessageAlert($title,$messag,$id){
@@ -191,7 +191,7 @@ class User{
     }
 
     public function getAllMessage(){
-        $sql = "SELECT U.fname, U.lname, U.email, M.title, M.id FROM users U, alert_messag M WHERE U.id = M.id_user";
+        $sql = "SELECT U.fname, U.lname, U.email, M.title, M.id_user FROM users U, alert_messag M WHERE U.id = M.id_user";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -200,9 +200,24 @@ class User{
     }
 
     public function deleteAlertMessage($id){
-        $sql = "DELETE FROM alert_messag WHERE id = ? ";
+        $sql = "DELETE FROM alert_messag WHERE id_user = ? ";
         $db = (new Db())->getConnection();
         $stmt = $db->prepare($sql);
+        $stmt->execute([$id]);
+    }
+
+    public function deleteRecommend($id){
+        $sql = "DELETE FROM recommend WHERE (id_coach = ? OR id_client = ?)";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id,$id]);
+    }
+
+    public function updateStatusCoachClient($id){
+        $sql = "UPDATE coach_client SET status = '2' WHERE id = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+
         $stmt->execute([$id]);
     }
 }

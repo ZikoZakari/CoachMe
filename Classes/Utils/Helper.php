@@ -169,6 +169,18 @@ class Helper
         return false;
     }
 
+    public static function checkCoachClientStatus($id_coach,$id_client,$status){
+        $sql = "SELECT id FROM coach_client WHERE id_coach = ? AND id_client = ? AND status = ? ORDER BY id LIMIT 1";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$id_coach,$id_client,$status]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return false;
+        return true;
+    }
+
     public static function checkIfLinkExist($table,$id){
 
         $db = (new Db())->getConnection();
@@ -180,6 +192,11 @@ class Helper
         }
         if ($table = 2){
             $sql = "SELECT id FROM coach_client WHERE (id_coach = ? OR id_client = ?)";
+            $stmt = $db->prepare($sql);
+            $stmt->execute([$id,$id]);
+        }
+        if($table = 3){
+            $sql = "SELECT id FROM recommend WHERE (id_coach = ? OR id_client = ?)";
             $stmt = $db->prepare($sql);
             $stmt->execute([$id,$id]);
         }
@@ -201,5 +218,13 @@ class Helper
         if ($rows == NULL)
             return true;
         return false;
+    }
+
+    public static function stringLimiter($string,$max){
+        if(strlen($string) <= $max){
+            return $string;
+        }else if (strlen($string) > $max){
+            return substr($string,0,$max) . " ...";
+        }
     }
 }
