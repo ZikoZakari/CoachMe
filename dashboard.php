@@ -30,6 +30,9 @@ if (empty($_SESSION)) {
 
 $coach = new Coach;
 $coachs = $coach->getAllCoache();
+$coachsActifs = $coach->getActifUsers('coach');
+$clientsActifs = $coach->getActifUsers('client');
+$coachsInActif = count($coachs);
 
 $user = new User;
 $users = $user->getAllUsers();
@@ -46,17 +49,17 @@ $newslatters = $newslatter->get();
 if (isset($_POST['accept'])) {
 
     extract($_POST);
-    try{
+    try {
         $profil = new User;
         $profil->updateStatusUser($accept);
-        if (!Helper::messagNotExist($accept)){
+        if (!Helper::messagNotExist($accept)) {
             $profil->deleteAlertMessage($accept);
         }
-        $msgDash = Helper::flushMessage('Utilisateur autorisé','alert alert-success text-center');
-    } catch (Exception $e){
-        $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center');
+        $msgDash = Helper::flushMessage('Utilisateur autorisé', 'alert alert-success text-center');
+    } catch (Exception $e) {
+        $msgDash = Helper::flushMessage('ERROR', 'alert alert-danger text-center');
     }
-    
+
     // 
 }
 
@@ -77,23 +80,21 @@ if (isset($_POST['userId'])) {
             $delete->deleteUserLinkCoach_client($userId);
         }
 
-        if (!Helper::messagNotExist($userId)){
+        if (!Helper::messagNotExist($userId)) {
 
             $delete->deleteAlertMessage($userId);
         }
 
-        if (Helper::checkIfLinkExist(3,$userId)){
+        if (Helper::checkIfLinkExist(3, $userId)) {
 
             $delete->deleteRecommend($userId);
         }
 
         $delete->deleteUser($userId);
         $msgDeleteUser =  Helper::flushMessage('User delete', 'alert alert-success text-center');
-
     } catch (Exception $e) {
 
         $msgDeleteUser = Helper::flushMessage('User cannot be deleted', 'alert alert-danger text-center');
-
     }
 }
 
@@ -107,47 +108,45 @@ if (isset($_POST['messagId'])) {
         $delete->deleteContactMessag($messagId);
 
         $msgDeleteContact =  Helper::flushMessage('Message deleted', 'alert alert-success text-center');
-
     } catch (Exception $e) {
 
         $msgDeleteContact = Helper::flushMessage('Message cannot be deleted', 'alert alert-danger text-center');
-
     }
 }
 
-if (isset($_POST['message-alert'])){
+if (isset($_POST['message-alert'])) {
 
-    if (!empty($_POST['title']) && !empty($_POST['message'])){
+    if (!empty($_POST['title']) && !empty($_POST['message'])) {
 
         extract($_POST);
         $title = Helper::sanitizeString($title);
         $message = Helper::sanitizeString($message);
 
-        if (Helper::messagNotExist($id)){
+        if (Helper::messagNotExist($id)) {
 
-            try{
-            $messag = new User;
-            $messag->sendMessageAlert($title,$message,$id);
-            $msgDash = Helper::flushMessage('Message envoyer','alert alert-success text-center');
+            try {
+                $messag = new User;
+                $messag->sendMessageAlert($title, $message, $id);
+                $msgDash = Helper::flushMessage('Message envoyer', 'alert alert-success text-center');
             } catch (Exception $e) {
-               $msgDash = Helper::flushMessage('ERROR','alert alert-danger text-center'); 
+                $msgDash = Helper::flushMessage('ERROR', 'alert alert-danger text-center');
             }
-        }else{  
-            $msgDash = Helper::flushMessage('Message deja envoyer','alert alert-danger text-center');
+        } else {
+            $msgDash = Helper::flushMessage('Message deja envoyer', 'alert alert-danger text-center');
         }
-    }else{
-        $msgDash = Helper::flushMessage('Veuillez remplir tous les champs','alert alert-danger text-center');
+    } else {
+        $msgDash = Helper::flushMessage('Veuillez remplir tous les champs', 'alert alert-danger text-center');
     }
 }
 
-if (isset($_POST['user-messag-Id'])){
+if (isset($_POST['user-messag-Id'])) {
 
-    try{
+    try {
         $delete = new User;
         $delete->deleteAlertMessage($_POST['user-messag-Id']);
         $msgDeleteAlert =  Helper::flushMessage('Message deleted', 'alert alert-success text-center');
-    } catch (Exception $e){
-        $msgDeleteAlert = Helper::flushMessage('ERROR','alert alert-danger text-center');
+    } catch (Exception $e) {
+        $msgDeleteAlert = Helper::flushMessage('ERROR', 'alert alert-danger text-center');
     }
 }
 
@@ -251,12 +250,101 @@ if (isset($_POST['user-messag-Id'])){
             </div>
 
             <main class="tab-content col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
                 <div class="container-fluid py-3">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h2">Dashboard</h1>
                     </div>
-                    <?= isset($msgDash) ? $msgDash : '' ;?>
+
+                    <div class="row">
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-0 border-start border-5 border-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="fs-6 fw-bold text-primary text-uppercase mb-1">
+                                                Clients
+                                            </div>
+                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
+                                                <?= $clientsActifs->clients ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-users fa-2x text-primary"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Annual) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-0 border-start border-5 border-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="fs-6 fw-bold text-success text-uppercase mb-1">
+                                                Coachs
+                                            </div>
+                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
+                                            <?= $coachsActifs->coachs ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-solid fa-dumbbell fa-2x text-success"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tasks Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-0 border-start border-5 border-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="fs-6 fw-bold text-info text-uppercase mb-1">
+                                                Inscriptions en cours
+                                            </div>
+                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
+                                                <?= $coachsInActif ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-info"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-0 border-start border-5 border-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col me-2">
+                                            <div class="fs-6 fw-bold text-warning text-uppercase mb-1">
+                                                Mesaage
+                                            </div>
+                                            <div class="h5 mb-0 fw-bold text-dark-emphasis">
+                                                <?= count($contacts) ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-comments fa-2x text-warning"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">
+                        <h1 class="h2">demandes d'inscriptions</h1>
+                    </div>
+                    <?= isset($msgDash) ? $msgDash : ''; ?>
                     <table class="hover row-border stripe" id="dashboards" style="width:100%">
                         <thead>
                             <tr>
@@ -320,7 +408,7 @@ if (isset($_POST['user-messag-Id'])){
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
                         <h1 class="h2">Messages d'alerte envoyer</h1>
                     </div>
-                    <?= isset($msgDeleteAlert) ? $msgDeleteAlert : '' ;?>
+                    <?= isset($msgDeleteAlert) ? $msgDeleteAlert : ''; ?>
                     <table class="hover row-border stripe" id="messageAlert" style="width:100%">
                         <thead>
                             <tr>
@@ -351,7 +439,7 @@ if (isset($_POST['user-messag-Id'])){
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="user">
                         <h1 class="h2">All Users</h1>
                     </div>
-                    <?= isset($msgDeleteUser) ? $msgDeleteUser : '' ;?>
+                    <?= isset($msgDeleteUser) ? $msgDeleteUser : ''; ?>
                     <table class="hover row-border stripe" id="users" style="width:100%">
                         <thead>
                             <tr>
@@ -370,7 +458,17 @@ if (isset($_POST['user-messag-Id'])){
                                     <td><?= $user->lname ?></td>
                                     <td><?= $user->email ?></td>
                                     <td><?= $user->role ?></td>
-                                    <td><?php if ($user->role == 'Coach'){ if ($user->status == 0) { echo 'En attente'; }else{ if($user->status == 1) { echo 'Actif'; } } }else{ echo '-'; } ?></td>
+                                    <td><?php if ($user->role == 'Coach') {
+                                            if ($user->status == 0) {
+                                                echo 'En attente';
+                                            } else {
+                                                if ($user->status == 1) {
+                                                    echo 'Actif';
+                                                }
+                                            }
+                                        } else {
+                                            echo '-';
+                                        } ?></td>
                                     <td>
                                         <form method="POST" class="d-flex justify-content-center">
                                             <button type="submit" class="btn btn-danger w-100 me-1" id="userId" name="userId" value="<?= $user->id ?>"><i class="bi bi-trash"></i></button>
@@ -384,7 +482,7 @@ if (isset($_POST['user-messag-Id'])){
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="contact">
                         <h1 class="h2">Contact</h1>
                     </div>
-                    <?= isset($msgDeleteContact) ? $msgDeleteContact : '' ;?>
+                    <?= isset($msgDeleteContact) ? $msgDeleteContact : ''; ?>
                     <table class="hover row-border stripe" id="contacts" style="width:100%">
                         <thead>
                             <tr>
@@ -413,28 +511,27 @@ if (isset($_POST['user-messag-Id'])){
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                </div>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="newslatter">
+                        <h1 class="h2">Newslatters</h1>
+                    </div>
 
-                <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="newslatter">
-                    <h1 class="h2">Newslatters</h1>
-                </div>
-
-                <table class="hover row-border stripe" id="newslatters" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>IP</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($newslatters as $newslatter) : ?>
+                    <table class="hover row-border stripe" id="newslatters" style="width:100%">
+                        <thead>
                             <tr>
-                                <td><?= $newslatter->email ?></td>
-                                <td><?= $newslatter->ip ?></td>
+                                <th>Email</th>
+                                <th>IP</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($newslatters as $newslatter) : ?>
+                                <tr>
+                                    <td><?= $newslatter->email ?></td>
+                                    <td><?= $newslatter->ip ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Dashboard</h1>

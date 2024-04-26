@@ -135,4 +135,18 @@ class Coach{
         $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
         return $rows;
     }
+
+    public function getActifUsers($role){
+        if ($role === 'coach'){
+            $sql = "SELECT count(*) AS coachs FROM users WHERE role = 'Coach' AND status = '1'";
+        }
+        if ($role === 'client'){
+            $sql = "SELECT count(*) AS clients FROM users WHERE role = 'Client'";
+        }
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+        return $rows;
+    }
 }
