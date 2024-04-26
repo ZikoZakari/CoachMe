@@ -165,3 +165,18 @@
 .opc img{
   filter: opacity(50%);
 }
+
+.img-profil{
+  height: 120px;
+  width: 120px;
+}
+
+.avatar{
+  height: 32px;
+  width: 32px;
+}
+
+.img-coach{
+  height: 286.4px;
+  width: 286.4px;
+}

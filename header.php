@@ -57,7 +57,7 @@ if (!empty($_SESSION)) {
                                     echo 'uploads/img/' . $user->pictur;
                                   } else {
                                     echo 'images/profile-img-1.jpg';
-                                  } ?>" class="img-fluid rounded-circle" alt="mdo" width="32" height="32" class="rounded-circle">
+                                  } ?>" class="avatar img-fluid rounded-circle" alt="mdo" width="32" height="32" class="rounded-circle">
             </a>
             <ul class="dropdown-menu text-small">
               <li>

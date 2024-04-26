@@ -69,7 +69,7 @@ if (isset($_POST['nl-sub'])) {
                 <div class="col mb-5">
                     <div class="card h-100 rounded-5 shadow-lg">
                         <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (<?= $coach->recommend ?>)</div>
-                        <img class="card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) {
+                        <img class="img-coach card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) {
                                                                                     echo 'uploads/img/' . $coach->pictur;
                                                                                 } else {
                                                                                     echo 'images/profile-img-1.jpg';
