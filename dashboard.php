@@ -340,6 +340,9 @@ if (isset($_POST['user-messag-Id'])) {
                             </div>
                         </div>
                     </div>
+                    
+                    <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">
                         <h1 class="h2">demandes d'inscriptions</h1>
@@ -480,7 +483,7 @@ if (isset($_POST['user-messag-Id'])) {
                     </table>
 
                     <div class="d-sm-flex align-items-center justify-content-between mb-4 mt-4" id="contact">
-                        <h1 class="h2">Contact</h1>
+                        <h1 class="h2">Contacts</h1>
                     </div>
                     <?= isset($msgDeleteContact) ? $msgDeleteContact : ''; ?>
                     <table class="hover row-border stripe" id="contacts" style="width:100%">
@@ -488,7 +491,7 @@ if (isset($_POST['user-messag-Id'])) {
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Phone</th>
+                                <th class ="text-start">Phone</th>
                                 <th>Subject</th>
                                 <th>Message</th>
                                 <th>Action</th>
@@ -499,7 +502,7 @@ if (isset($_POST['user-messag-Id'])) {
                                 <tr>
                                     <td><?= $contact->name ?></td>
                                     <td><?= $contact->email ?></td>
-                                    <td><?= $contact->phone ?></td>
+                                    <td class="text-start"><?= !empty($contact->phone) ? $contact->phone : '-'; ?></td>
                                     <td><?= $contact->subject ?></td>
                                     <td><?= $contact->message ?></td>
                                     <td>
