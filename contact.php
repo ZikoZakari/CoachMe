@@ -33,24 +33,27 @@ if (isset($_POST['submit'])) {
 if (isset($_POST['nl-sub'])) {
     extract($_POST);
     if (!empty($nlEmail)) {
-        if (Helper::validateEmail($nlEmail)) {
-            // get ip
-            $ip = $_SERVER['REMOTE_ADDR'];
-
-            try {
-                $newslatter = new Newslatter();
-                $newslatter->add($nlEmail, $ip);
-                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
-            } catch (Exception $e) {
-                $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
-            }
+      if (Helper::validateEmail($nlEmail)) {
+        if (!Helper::checkIfEmailExist($nlEmail)) {
+          // get ip
+          $ip = $_SERVER['REMOTE_ADDR'];
+          try {
+            $newslatter = new Newslatter();
+            $newslatter->add($nlEmail, $ip);
+            $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
+          } catch (Exception $e) {
+            $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
+          }
         } else {
-            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+          $nlMsg = Helper::flushMessage("Email existe deja", "alert alert-danger text-center");
         }
+      } else {
+        $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+      }
     }
-}
+  }
 ?>
-
+<?= isset($nlMsg) ? $nlMsg : ''; ?>
 <!-- Contact  -->
 <section class=" py-3 py-md-5">
     <div class="container">
@@ -59,9 +62,6 @@ if (isset($_POST['nl-sub'])) {
                 <h3 class="fs-6 text-secondary mb-2 text-uppercase text-center">
                     Contactez-nous
                 </h3>
-                <!-- <h2 class="display-6 text-center">
-                    Une question ? Besoin d'aide ou d'informations ?
-                </h2> -->
                 <h2 class="display-5 mb-4 mb-md-5 text-center">
                     Nous sommes à votre écoute. N'hésitez pas à nous contacter!</h2>
                 <hr class="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle" />

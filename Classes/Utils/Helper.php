@@ -227,4 +227,16 @@ class Helper
             return substr($string,0,$max) . " ...";
         }
     }
+
+    public static function checkIfEmailExist($email){
+        $sql = "SELECT id FROM newslatter WHERE email = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$email]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return false;
+        return true;
+    }
 }

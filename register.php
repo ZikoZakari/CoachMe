@@ -72,32 +72,36 @@ if (isset($_POST['register'])) {
 if (isset($_POST['nl-sub'])) {
     extract($_POST);
     if (!empty($nlEmail)) {
-        if (Helper::validateEmail($nlEmail)) {
-            // get ip
-            $ip = $_SERVER['REMOTE_ADDR'];
-
-            try {
-                $newslatter = new Newslatter();
-                $newslatter->add($nlEmail, $ip);
-                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
-            } catch (Exception $e) {
-                $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
-            }
+      if (Helper::validateEmail($nlEmail)) {
+        if (!Helper::checkIfEmailExist($nlEmail)) {
+          // get ip
+          $ip = $_SERVER['REMOTE_ADDR'];
+          try {
+            $newslatter = new Newslatter();
+            $newslatter->add($nlEmail, $ip);
+            $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
+          } catch (Exception $e) {
+            $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
+          }
         } else {
-            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+          $nlMsg = Helper::flushMessage("Email existe deja", "alert alert-danger text-center");
         }
+      } else {
+        $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+      }
     }
-}
+  }
 ?>
 
 <main>
+<?= isset($nlMsg) ? $nlMsg : ''; ?>
     <div class="container h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col">
                 <div class="card card-registration my-4">
                     <div class="row g-0">
                         <div class="col-xl-6 d-none d-xl-block">
-                            <img src="static/images/register-pic.jpg" alt="Sample photo" class="img-fluid object-fit-cover h-100 w-100"/>
+                            <img src="static/images/register-pic.jpg" alt="Sample photo" class="img-fluid object-fit-cover h-100 w-100 rounded-start-2"/>
                         </div>
                         <div class="col-xl-6">
                             <div class="card-body p-md-5">
@@ -259,7 +263,6 @@ if (isset($_POST['nl-sub'])) {
 
             <div class="col-md-5 offset-md-1 mb-3">
                 <form method="POST">
-                    <?= isset($nlMsg) ? $nlMsg : ''; ?>
                     <h5>Subscribe to our newsletter</h5>
                     <p>Monthly digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">

@@ -14,37 +14,33 @@ $coachs = $coach->getCoache();
 
 include_once "header.php";
 
-if(isset($_POST['nl-sub']))
-{
-    extract($_POST);
-    if(!empty($nlEmail))
-    {
-        if(Helper::validateEmail($nlEmail))
-        {
-            // get ip
-            $ip = $_SERVER['REMOTE_ADDR'];
-
-            try{
-                $newslatter = new Newslatter();
-                $newslatter->add($nlEmail,$ip);
-                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès","alert alert-success text-center");
-            }
-            catch(Exception $e)
-            {
-                $nlMsg = Helper::flushMessage("Erreur de l'abonnement","alert alert-danger text-center");
-            }
-            
+if (isset($_POST['nl-sub'])) {
+  extract($_POST);
+  if (!empty($nlEmail)) {
+    if (Helper::validateEmail($nlEmail)) {
+      if (!Helper::checkIfEmailExist($nlEmail)) {
+        // get ip
+        $ip = $_SERVER['REMOTE_ADDR'];
+        try {
+          $newslatter = new Newslatter();
+          $newslatter->add($nlEmail, $ip);
+          $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
+        } catch (Exception $e) {
+          $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
         }
-        else
-        {
-            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement","alert alert-danger text-center");
-        }
+      } else {
+        $nlMsg = Helper::flushMessage("Email existe deja", "alert alert-danger text-center");
+      }
+    } else {
+      $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
     }
+  }
 }
 
 ?>
 <main class="">
   <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+    <?= isset($nlMsg) ? $nlMsg : ''; ?>
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
       <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -115,21 +111,25 @@ if(isset($_POST['nl-sub']))
     </div>
     <!-- Three columns of text below the carousel -->
     <div class="row">
-      <?php foreach($coachs as $coach): 
-        $coach->about = Helper::stringLimiter($coach->about,100);
+      <?php foreach ($coachs as $coach) :
+        $coach->about = Helper::stringLimiter($coach->about, 100);
       ?>
-      <div class="col-lg-4">
-        <img class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" src="<?php if (!empty($coach->pictur)){ echo 'static/uploads/img/'.$coach->pictur; }else{ echo 'static/images/profile-img-1.jpg'; } ?>">
-        <h4 class="fw-normal"><?= $coach->fname.' '.$coach->lname ?></h4>
-        <p>
-        <?= $coach->about ?>
-        </p>
-        <p>
-          <a class="btn btn-secondary" href="coach.php?coach=<?= $coach->id ?>">View details &raquo;</a>
-        </p>
-      </div>
+        <div class="col-lg-4">
+          <img class="bd-placeholder-img rounded-circle mb-3" width="140" height="140" src="<?php if (!empty($coach->pictur)) {
+                                                                                              echo 'static/uploads/img/' . $coach->pictur;
+                                                                                            } else {
+                                                                                              echo 'static/images/profile-img-1.jpg';
+                                                                                            } ?>">
+          <h4 class="fw-normal"><?= $coach->fname . ' ' . $coach->lname ?></h4>
+          <p>
+            <?= $coach->about ?>
+          </p>
+          <p>
+            <a class="btn btn-secondary" href="coach.php?coach=<?= $coach->id ?>">View details &raquo;</a>
+          </p>
+        </div>
       <?php endforeach; ?>
-      
+
       <!-- <div class="col-lg-4">
         <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
           <title>Placeholder</title>
@@ -166,7 +166,7 @@ if(isset($_POST['nl-sub']))
     </div>
     <!-- START THE FEATURETTES -->
 
-    <hr class="mb-5"/>
+    <hr class="mb-5" />
 
     <div class="row featurette">
       <div class="col-md-7">
@@ -304,7 +304,6 @@ if(isset($_POST['nl-sub']))
 
       <div class="col-md-5 offset-md-1 mb-3">
         <form method="POST">
-          <?= isset($nlMsg) ? $nlMsg : ''; ?>
           <h5>Subscribe to our newsletter</h5>
           <p>Monthly digest of what's new and exciting from us.</p>
           <div class="d-flex flex-column flex-sm-row w-100 gap-2">
