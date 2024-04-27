@@ -33,11 +33,11 @@ $profil->skills = explode(',',$profil->skills);
                             </div>
                             <div class="card-body">
                                 <div class="text-center mb-3">
-                                    <img width="120px" src="static/<?php if ($profil->pictur != NULL) {
+                                    <img src="static/<?php if ($profil->pictur != NULL) {
                                                                         echo 'uploads/img/' . $profil->pictur;
                                                                     } else {
                                                                         echo 'images/profile-img-1.jpg';
-                                                                    } ?>" class="img-fluid rounded-circle" alt="Luna John" />
+                                                                    } ?>" class="img-profil img-fluid rounded-circle" />
                                 </div>
                                 <h5 class="text-center mb-1"><?= $profil->fname . ' ' . $profil->lname ?></h5>
                                 <p class="text-center text-secondary mb-3">

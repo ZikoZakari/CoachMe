@@ -53,36 +53,31 @@ if(!empty($_POST["email"]) && !empty($_POST["password"]))
 
 /* Newslatter */
 
-if(isset($_POST['nl-sub']))
-{
+if (isset($_POST['nl-sub'])) {
     extract($_POST);
-    if(!empty($nlEmail))
-    {
-        if(Helper::validateEmail($nlEmail))
-        {
-            // get ip
-            $ip = $_SERVER['REMOTE_ADDR'];
-
-            try{
-                $newslatter = new Newslatter();
-                $newslatter->add($nlEmail,$ip);
-                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès","alert alert-success text-center");
-            }
-            catch(Exception $e)
-            {
-                $nlMsg = Helper::flushMessage("Erreur de l'abonnement","alert alert-danger text-center");
-            }
-            
+    if (!empty($nlEmail)) {
+      if (Helper::validateEmail($nlEmail)) {
+        if (!Helper::checkIfEmailExist($nlEmail)) {
+          // get ip
+          $ip = $_SERVER['REMOTE_ADDR'];
+          try {
+            $newslatter = new Newslatter();
+            $newslatter->add($nlEmail, $ip);
+            $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
+          } catch (Exception $e) {
+            $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
+          }
+        } else {
+          $nlMsg = Helper::flushMessage("Email existe deja", "alert alert-danger text-center");
         }
-        else
-        {
-            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement","alert alert-danger text-center");
-        }
+      } else {
+        $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+      }
     }
-}
+  }
 
 ?>
-
+<?= isset($nlMsg) ? $nlMsg : ''; ?>
 <main class="container">
     <div class="row align-items-center g-lg-5 py-5">
         <div class="col-lg-7 text-center text-lg-start">
@@ -189,7 +184,6 @@ if(isset($_POST['nl-sub']))
 
             <div class="col-md-5 offset-md-1 mb-3">
                 <form method="POST">
-                    <?= isset($nlMsg) ? $nlMsg : '' ;?>
                     <h5>Subscribe to our newsletter</h5>
                     <p>Monthly digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">
@@ -213,7 +207,7 @@ if(isset($_POST['nl-sub']))
         </svg>
         <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text" style="">
+    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
         <li>
             <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light"
                 aria-pressed="true">

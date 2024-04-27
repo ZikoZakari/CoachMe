@@ -185,17 +185,17 @@ class Helper
 
         $db = (new Db())->getConnection();
 
-        if ($table = 1){
+        if ($table === 1){
             $sql = "SELECT id FROM details WHERE id_user = ?";
             $stmt = $db->prepare($sql);
             $stmt->execute([$id]);
         }
-        if ($table = 2){
+        if ($table === 2){
             $sql = "SELECT id FROM coach_client WHERE (id_coach = ? OR id_client = ?)";
             $stmt = $db->prepare($sql);
             $stmt->execute([$id,$id]);
         }
-        if($table = 3){
+        if($table === 3){
             $sql = "SELECT id FROM recommend WHERE (id_coach = ? OR id_client = ?)";
             $stmt = $db->prepare($sql);
             $stmt->execute([$id,$id]);
@@ -226,5 +226,17 @@ class Helper
         }else if (strlen($string) > $max){
             return substr($string,0,$max) . " ...";
         }
+    }
+
+    public static function checkIfEmailExist($email){
+        $sql = "SELECT id FROM newslatter WHERE email = ?";
+        $db = (new Db())->getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$email]);
+        $rows = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($rows == NULL)
+            return false;
+        return true;
     }
 }

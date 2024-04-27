@@ -21,24 +21,27 @@ include_once "header.php";
 if (isset($_POST['nl-sub'])) {
     extract($_POST);
     if (!empty($nlEmail)) {
-        if (Helper::validateEmail($nlEmail)) {
-            // get ip
-            $ip = $_SERVER['REMOTE_ADDR'];
-
-            try {
-                $newslatter = new Newslatter();
-                $newslatter->add($nlEmail, $ip);
-                $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
-            } catch (Exception $e) {
-                $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
-            }
+      if (Helper::validateEmail($nlEmail)) {
+        if (!Helper::checkIfEmailExist($nlEmail)) {
+          // get ip
+          $ip = $_SERVER['REMOTE_ADDR'];
+          try {
+            $newslatter = new Newslatter();
+            $newslatter->add($nlEmail, $ip);
+            $nlMsg = Helper::flushMessage("Abonnement effectué avec succès", "alert alert-success text-center");
+          } catch (Exception $e) {
+            $nlMsg = Helper::flushMessage("Erreur de l'abonnement", "alert alert-danger text-center");
+          }
         } else {
-            $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+          $nlMsg = Helper::flushMessage("Email existe deja", "alert alert-danger text-center");
         }
+      } else {
+        $nlMsg = Helper::flushMessage("Veuillez saissire votre email correctement", "alert alert-danger text-center");
+      }
     }
-}
+  }
 ?>
-
+<?= isset($nlMsg) ? $nlMsg : ''; ?>
 <header class="bg-dark py-4">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
@@ -69,7 +72,7 @@ if (isset($_POST['nl-sub'])) {
                 <div class="col mb-5">
                     <div class="card h-100 rounded-5 shadow-lg">
                         <div class="rec position-absolute text-bg-secondary rounded-5 py-1 px-2 fw-medium">recommander (<?= $coach->recommend ?>)</div>
-                        <img class="card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) {
+                        <img class="img-coach card-img-top rounded-top-5" src="./static/<?php if ($coach->pictur != NULL) {
                                                                                     echo 'uploads/img/' . $coach->pictur;
                                                                                 } else {
                                                                                     echo 'images/profile-img-1.jpg';
@@ -168,7 +171,6 @@ if (isset($_POST['nl-sub'])) {
 
             <div class="col-md-5 offset-md-1 mb-3">
                 <form method="POST">
-                    <?= isset($nlMsg) ? $nlMsg : ''; ?>
                     <h5>Subscribe to our newsletter</h5>
                     <p>Monthly digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">

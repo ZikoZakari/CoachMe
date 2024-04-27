@@ -229,11 +229,11 @@ if (isset($_POST['save-password'])) {
               </div>
               <div class="card-body">
                 <div class="text-center mb-3">
-                  <img width="120px" src="./static/<?php if ($user->pictur != NULL) {
+                  <img src="./static/<?php if ($user->pictur != NULL) {
                                                       echo 'uploads/img/' . $user->pictur;
                                                     } else {
                                                       echo 'images/profile-img-1.jpg';
-                                                    } ?>" class="img-fluid rounded-circle" />
+                                                    } ?>" class="img-profil img-fluid rounded-circle" />
                 </div>
                 <h5 class="text-center mb-1"><?= $user->fname . ' ' . $user->lname ?></h5>
                 <p class="text-center text-secondary mb-4">

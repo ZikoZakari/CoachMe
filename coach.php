@@ -14,8 +14,6 @@ $user = new Coach;
 $profil = $user->getCoacheById($_GET['coach']);
 $profil->skills = explode(',',$profil->skills);
 
-// var_dump(HELPER::checkIfNotExist(1,$_GET['coach'], $_SESSION['id']));
-
 if (isset($_POST['submit'])) {
 
     extract($_POST);
@@ -98,7 +96,7 @@ if (isset($_POST['recommend'])){
                                                                         echo 'uploads/img/' . $profil->pictur;
                                                                     } else {
                                                                         echo 'images/profile-img-1.jpg';
-                                                                    } ?>" class="img-fluid rounded-circle" alt="Luna John" />
+                                                                    } ?>" class="img-profil img-fluid rounded-circle"/>
                                 </div>
                                 <h5 class="text-center mb-1"><?= $profil->fname . ' ' . $profil->lname ?></h5>
                                 <p class="text-center text-secondary mb-3">
