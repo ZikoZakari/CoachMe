@@ -45,7 +45,7 @@ $profil->skills = explode(',',$profil->skills);
                                 </p>
                                 <h6 class="fw-bolder text-center mb-1">A partir de</h6>
                                 <h6 class="fw-bolder text-success text-center mb-4"><?php if ($profil->prix != NULL) {
-                                                                                        echo $profil->prix . '€ / heure';
+                                                                                        echo $profil->prix . '$ / heure';
                                                                                     } else {
                                                                                         echo 'FREE';
                                                                                     } ?></h6>

@@ -87,7 +87,7 @@ if (isset($_POST['nl-sub'])) {
                             <div class="text-center mt-2">
                                 <h6 class="fw-bolder">A partir de</h6>
                                 <h6 class="fw-bolder text-success"><?php if ($coach->prix != NULL) {
-                                                                        echo $coach->prix . '€ / heure';
+                                                                        echo $coach->prix . '$ / heure';
                                                                     } else {
                                                                         echo 'FREE';
                                                                     } ?></h6>

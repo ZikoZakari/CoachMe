@@ -364,7 +364,7 @@ if (isset($_POST['user-messag-Id'])) {
                                 <tr>
                                     <td><?= $coach->fname ?></td>
                                     <td><?= $coach->lname ?></td>
-                                    <td><?= $coach->prix ?> € / Heure</td>
+                                    <td><?= $coach->prix ?> $ / Heure</td>
                                     <td>
                                         <?php if ($coach->cv !== NULL) { ?><a class="btn btn-primary d-flex justify-content-center" href="static/uploads/cv/<?= $coach->cv ?>">Show CV</a><?php } else {
                                                                                                                                                                                             echo "Pas de cv";

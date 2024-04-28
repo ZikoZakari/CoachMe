@@ -512,7 +512,7 @@ if (isset($_POST['save-password'])) {
                     <div class="col-12 col-md-12 mb-3">
                       <label for="price" class="form-label">Prix de base</label>
                       <div class="input-group">
-                        <span class="input-group-text">€</span>
+                        <span class="input-group-text">$</span>
                         <input type="text" class="form-control" id="price" name="price" value="<?= $user->prix ?>">
                         <span class="input-group-text">.00</span>
                       </div>
