@@ -36,7 +36,7 @@ class Helper
 
     public static function validatePhone($phone)
     {
-        $pattern = '/^[0-9 ]+$/';
+        $pattern = '/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/';
 
         if (!preg_match($pattern, $phone)) {
             return false;
