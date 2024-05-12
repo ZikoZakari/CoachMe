@@ -8,10 +8,10 @@ new DataTable('#newslatters');
     'use strict'
   
     // Graphs
-    const ctx = document.getElementById('myChart')
+    const ctx = document.getElementById('myPie')
     // eslint-disable-next-line no-unused-vars
     const myChart = new Chart(ctx, {
-      type: 'line',
+      type: 'pie',
       data: {
         labels: [
           'Client',
@@ -23,12 +23,7 @@ new DataTable('#newslatters');
             3,
             3,
             10
-          ],
-          lineTension: 0,
-          backgroundColor: 'transparent',
-          borderColor: '#007bff',
-          borderWidth: 2,
-          pointBackgroundColor: '#007bff'
+          ]
         }]
       },
       options: {
