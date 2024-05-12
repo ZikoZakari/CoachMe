@@ -237,7 +237,7 @@ if (isset($_POST['save-password'])) {
                 </div>
                 <h5 class="text-center mb-1"><?= $user->fname . ' ' . $user->lname ?></h5>
                 <p class="text-center text-secondary mb-4">
-                  @<?= $user->username ?>
+                  @<?= $user->username ?> <?php if(($user->status == 0) && ($_SESSION['role'] == 'Coach')): ?><span class="badge text-bg-warning">En attante</span><?php endif; ?>
                 </p>
                 <div class="text-center mb-3">
                   <form method="POST" enctype="multipart/form-data">

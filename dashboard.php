@@ -340,8 +340,18 @@ if (isset($_POST['user-messag-Id'])) {
                             </div>
                         </div>
                     </div>
-                    
-                    <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
+                    <div class="row ">
+                        <div class="card col-4">
+                            <div class="card-body">
+                                <canvas class="my-4 w-100" id="myPie" width="900" height="380"></canvas>
+                            </div>
+                        </div>
+                        <div class="card col-8">
+                            <div class="card-body">
+                                <canvas class="my-4 w-100" id="myBar" width="900" height="380"></canvas>
+                            </div> 
+                        </div>
+                    </div>
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4" id="dashboard">

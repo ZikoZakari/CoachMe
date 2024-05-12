@@ -8,7 +8,8 @@
             "Classes\\Newsletter\\": "Classes/Newslatters",
             "Classes\\Coachs\\": "Classes/Coachs",
             "Classes\\Uploads\\": "Classes/Uploads",
-            "Classes\\Contacts\\": "Classes/Contacts"
+            "Classes\\Contacts\\": "Classes/Contacts",
+            "Classes\\Apis\\": "Classes/Apis"
         }
     },
     "require": {}
