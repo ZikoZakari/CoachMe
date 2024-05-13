@@ -235,7 +235,7 @@ if (isset($_POST['save-password'])) {
                                                       echo 'images/profile-img-1.jpg';
                                                     } ?>" class="img-profil img-fluid rounded-circle" />
                 </div>
-                <h5 class="text-center mb-1"><?= $user->fname . ' ' . $user->lname ?></h5>
+                <h5 class="text-center mb-1"><?= $user->fname . ' ' . $user->lname ?> <?php if(($user->status == 1) && ($_SESSION['role'] == 'Coach')): ?><i class="bi bi-patch-check-fill ms-1 text-success"></i><?php endif; ?></h5>
                 <p class="text-center text-secondary mb-4">
                   @<?= $user->username ?> <?php if(($user->status == 0) && ($_SESSION['role'] == 'Coach')): ?><span class="badge text-bg-warning">En attante</span><?php endif; ?>
                 </p>
