@@ -19,7 +19,7 @@ if ($_GET['chart'] == 'pie') {
     $coachsActifs = $coach->getActifUsers('coach');
     $clientsActifs = $coach->getActifUsers('client');
     $coachsInActif = count($coachs);
-    $respons = array("nb_client" => $clientsActifs->clients , "nb_coach_inAct" => $coachsInActif , "nb_coach_act" => $coachsActifs->coachs);
+    $respons = array("nb_client" => "$clientsActifs->clients" , "nb_coach_inAct" => "$coachsInActif" , "nb_coach_act" => "$coachsActifs->coachs");
 
     header('Content-Type: application/json');
     echo json_encode($respons);
