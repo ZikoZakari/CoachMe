@@ -81,22 +81,29 @@ if (isset($_POST['nl-sub'])) {
 <main class="container">
     <div class="row align-items-center g-lg-5 py-5">
         <div class="col-lg-7 text-center text-lg-start">
+
             <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">
-                Découvrez votre potentiel physique
+                Le chemin vers le succès est pavé de petites victoires
             </h1>
+            <img src="static/images/carousel-7.jpg" alt="Sample photo"
+                class="img-fluid object-fit-cover h-100 w-100 rounded-start-2" />
+
             <p class="col-lg-10 fs-4">
-                Inscrivez-vous dès maintenant pour une séance de découverte ou une évaluation de votre condition physique.
+                "Transformez votre sueur en succès, votre détermination en domination, et vos rêves en réalité.
+                Bienvenue dans le royaume de la transformation physique et mentale."
             </p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
             <form method="POST" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
                 <?= isset($errorMsg) ? $errorMsg : '';?>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" name="email" id="floatingInput" placeholder="name@example.com" />
+                    <input type="email" class="form-control" name="email" id="floatingInput"
+                        placeholder="name@example.com" />
                     <label for="floatingInput">Email address</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Password" />
+                    <input type="password" class="form-control" name="password" id="floatingPassword"
+                        placeholder="Password" />
                     <label for="floatingPassword">Password</label>
                 </div>
                 <!-- <div class="checkbox mb-3">
@@ -186,7 +193,8 @@ if (isset($_POST['nl-sub'])) {
                     <p>Monthly digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">
                         <label for="newsletter1" class="visually-hidden">Email address</label>
-                        <input id="newsletter1" type="email" class="form-control" name="nlEmail" placeholder="Email address" />
+                        <input id="newsletter1" type="email" class="form-control" name="nlEmail"
+                            placeholder="Email address" />
                         <input class="btn btn-primary" type="submit" name="nl-sub" value="Subscribe">
                     </div>
                 </form>
