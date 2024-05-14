@@ -1,40 +1,59 @@
-new DataTable('#dashboards');
-new DataTable('#messageAlert');
-new DataTable('#users');
-new DataTable('#contacts');
-new DataTable('#newslatters');
+new DataTable("#dashboards");
+new DataTable("#messageAlert");
+new DataTable("#users");
+new DataTable("#contacts");
+new DataTable("#newslatters");
 
-(() => {
-    'use strict'
-  
-    // Graphs
-    const ctx = document.getElementById('myPie')
-    // eslint-disable-next-line no-unused-vars
-    const myChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: [
-          'Client',
-          'Coach',
-          'Inscription'
-        ],
-        datasets: [{
-          data: [
-            3,
-            3,
-            10
-          ]
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false
-          },
-          tooltip: {
-            boxPadding: 3
-          }
-        }
-      }
-    })
-  })()
+// Fonction pour récupérer les données de l'API
+function fetchData(chartType) {
+  return fetch(`apiChart.php?chart=${chartType}`).then((response) =>
+    response.json()
+  );
+}
+
+// Création du graphique Bar
+function createBarChart() {
+  fetchData("bar").then((data) => {
+    var barData = {
+      labels: ["Hommes", "Femmes"],
+      datasets: [
+        {
+          label: "Nombre de personnes",
+          data: [data.nb_homme, data.nb_femme],
+          backgroundColor: ["#007bff", "#dc3545"],
+        },
+      ],
+    };
+
+    var ctx = document.getElementById("barChart").getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: "bar",
+      data: barData,
+    });
+  });
+}
+
+// Création du graphique Pie
+function createPieChart() {
+  fetchData("pie").then((data) => {
+    var pieData = {
+      labels: ["Clients Actifs", "Coachs Actifs", "Demeandes en cours"],
+      datasets: [
+        {
+          data: [data.nb_client, data.nb_coach_act, data.nb_coach_inAct],
+          backgroundColor: ["#007bff", "#28a745", "#dc3545"],
+        },
+      ],
+    };
+
+    var ctx = document.getElementById("pieChart").getContext("2d");
+    var myChart = new Chart(ctx, {
+      type: "pie",
+      data: pieData,
+    });
+  });
+}
+
+// Appel des fonctions pour créer les graphiques
+createBarChart();
+createPieChart();
