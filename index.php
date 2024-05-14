@@ -51,13 +51,12 @@ if (isset($_POST['nl-sub'])) {
         <img src="./static/images/carousel-1.jpg" class="h-100 w-100 object-fit-cover">
         <div class="container">
           <div class="carousel-caption text-start">
-            <h1>Example headline.</h1>
+            <h1>Transformez votre corps avec notre coaching</h1>
             <p class="opacity-75">
-              Some representative placeholder content for the first slide of
-              the carousel.
+            Découvrez nos méthodes de coaching uniques et adaptées à vos besoins. Obtenez des résultats remarquables grâce à notre approche personnalisée et à notre équipe d'experts.
             </p>
             <p>
-              <a class="btn btn-lg btn-primary" href="#">Sign up today</a>
+              <a class="btn btn-lg btn-primary" href="nos-coachs.php">Nos coachs</a>
             </p>
           </div>
         </div>
@@ -66,12 +65,11 @@ if (isset($_POST['nl-sub'])) {
         <img src="./static/images/carousel-2.jpg" class="h-100 w-100 object-fit-cover">
         <div class="container">
           <div class="carousel-caption">
-            <h1>Another example headline.</h1>
+            <h1>Transformez votre corps avec notre coaching</h1>
             <p>
-              Some representative placeholder content for the second slide
-              of the carousel.
+            Découvrez nos méthodes de coaching uniques et adaptées à vos besoins. Obtenez des résultats remarquables grâce à notre approche personnalisée et à notre équipe d'experts.
             </p>
-            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+            <p><a class="btn btn-lg btn-primary" href="nos-coachs.php">Nos coachs</a></p>
           </div>
         </div>
       </div>
@@ -79,13 +77,12 @@ if (isset($_POST['nl-sub'])) {
         <img src="./static/images/carousel-3.jpg" class="h-100 w-100 object-fit-cover">
         <div class="container">
           <div class="carousel-caption text-end">
-            <h1>One more for good measure.</h1>
+            <h1>Transformez votre corps avec notre coaching</h1>
             <p>
-              Some representative placeholder content for the third slide of
-              this carousel.
+            Découvrez nos méthodes de coaching uniques et adaptées à vos besoins. Obtenez des résultats remarquables grâce à notre approche personnalisée et à notre équipe d'experts.
             </p>
             <p>
-              <a class="btn btn-lg btn-primary" href="#">Browse gallery</a>
+              <a class="btn btn-lg btn-primary" href="nos-coachs.php">Nos coachs</a>
             </p>
           </div>
         </div>
@@ -101,15 +98,10 @@ if (isset($_POST['nl-sub'])) {
     </button>
   </div>
 
-  <!-- Marketing messaging and featurettes
-        ================================================== -->
-  <!-- Wrap the rest of the page in another container to center all the content. -->
-
   <div class="container marketing">
     <div class="text-center mb-5">
       <h1 class="fw-normal">Top coachs</h1>
     </div>
-    <!-- Three columns of text below the carousel -->
     <div class="row">
       <?php foreach ($coachs as $coach) :
         $coach->about = Helper::stringLimiter($coach->about, 100);
@@ -129,54 +121,23 @@ if (isset($_POST['nl-sub'])) {
           </p>
         </div>
       <?php endforeach; ?>
-
-      <!-- <div class="col-lg-4">
-        <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-          <title>Placeholder</title>
-          <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
-        </svg>
-        <h2 class="fw-normal">Heading</h2>
-        <p>
-          Another exciting bit of representative placeholder content. This
-          time, we've moved on to the second column.
-        </p>
-        <p>
-          <a class="btn btn-secondary" href="#">View details &raquo;</a>
-        </p>
-      </div>
-      <div class="col-lg-4">
-        <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false">
-          <title>Placeholder</title>
-          <rect width="100%" height="100%" fill="var(--bs-secondary-color)" />
-        </svg>
-        <h2 class="fw-normal">Heading</h2>
-        <p>
-          And lastly this, the third column of representative placeholder
-          content.
-        </p>
-        <p>
-          <a class="btn btn-secondary" href="#">View details &raquo;</a>
-        </p>
-      </div> -->
       <div class="d-flex justify-content-end">
         <p>
           <a class="btn btn-secondary" href="nos-coachs.php">View All &raquo;</a>
         </p>
       </div>
     </div>
-    <!-- START THE FEATURETTES -->
 
     <hr class="mb-5" />
 
     <div class="row featurette">
       <div class="col-md-7">
         <h2 class="featurette-heading fw-normal lh-1">
-          First featurette heading.
-          <span class="text-body-secondary">It’ll blow your mind.</span>
+          Programme de définition 
+          <span class="text-body-secondary">musculaire.</span>
         </h2>
         <p class="lead">
-          Some great placeholder content for the first featurette here.
-          Imagine some exciting prose here.
+        Choisissez parmi nos différents programmes de coaching pour atteindre vos objectifs de musculation.
         </p>
       </div>
       <div class="col-md-5">
@@ -191,13 +152,11 @@ if (isset($_POST['nl-sub'])) {
     <div class="row featurette">
       <div class="col-md-7 order-md-2">
         <h2 class="featurette-heading fw-normal lh-1">
-          Oh yeah, it’s that good.
-          <span class="text-body-secondary">See for yourself.</span>
+          Programme de préparation
+          <span class="text-body-secondary">physique.</span>
         </h2>
         <p class="lead">
-          Another featurette? Of course. More placeholder content here to
-          give you an idea of how this layout would work with some actual
-          real-world content in place.
+          Nos programmes de coaching en préparation physique vous aideront à améliorer vos performances sportives.
         </p>
       </div>
       <div class="col-md-5 order-md-1">
@@ -212,14 +171,11 @@ if (isset($_POST['nl-sub'])) {
     <div class="row featurette">
       <div class="col-md-7">
         <h2 class="featurette-heading fw-normal lh-1">
-          And lastly, this one.
-          <span class="text-body-secondary">Checkmate.</span>
+          Programme de renforcement
+          <span class="text-body-secondary">musculaire.</span>
         </h2>
         <p class="lead">
-          And yes, this is the last block of representative placeholder
-          content. Again, not really intended to be actually read, simply
-          here to give you a better view of what this would look like with
-          some actual content. Your content.
+        Optez pour nos programmes de coaching en renforcement musculaire pour développer votre force et votre endurance.
         </p>
       </div>
       <div class="col-md-5">
@@ -228,14 +184,9 @@ if (isset($_POST['nl-sub'])) {
         <rect width="100%" height="100%" fill="var(--bs-secondary-bg)" />
       </div>
     </div>
-
     <hr class="featurette-divider" />
-
-    <!-- /END THE FEATURETTES -->
   </div>
-  <!-- /.container -->
 </main>
-<!-- footer -->
 <div class="container">
   <footer class="pt-2">
     <div class="row">
@@ -259,7 +210,6 @@ if (isset($_POST['nl-sub'])) {
           </li>
         </ul>
       </div>
-
       <div class="col-6 col-md-2 mb-3">
         <h5>Section</h5>
         <ul class="nav flex-column">
@@ -280,7 +230,6 @@ if (isset($_POST['nl-sub'])) {
           </li>
         </ul>
       </div>
-
       <div class="col-6 col-md-2 mb-3">
         <h5>Section</h5>
         <ul class="nav flex-column">
@@ -304,8 +253,8 @@ if (isset($_POST['nl-sub'])) {
 
       <div class="col-md-5 offset-md-1 mb-3">
         <form method="POST">
-          <h5>Subscribe to our newsletter</h5>
-          <p>Monthly digest of what's new and exciting from us.</p>
+          <h5>Recevez des conseils de musculation</h5>
+          <p>Inscrivez-vous à notre newsletter pour recevoir des conseils de musculation et des offres exclusives.</p>
           <div class="d-flex flex-column flex-sm-row w-100 gap-2">
             <label for="newsletter1" class="visually-hidden">Email address</label>
             <input id="newsletter1" type="email" class="form-control" name="nlEmail" placeholder="Email address" />
