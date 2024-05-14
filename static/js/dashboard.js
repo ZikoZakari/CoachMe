@@ -15,12 +15,12 @@ function fetchData(chartType) {
 function createBarChart() {
   fetchData("bar").then((data) => {
     var barData = {
-      labels: ["Hommes", "Femmes"],
+      labels: ["Hommes", "Femmes","Autres"],
       datasets: [
         {
           label: "Nombre de personnes",
-          data: [data.nb_homme, data.nb_femme],
-          backgroundColor: ["#007bff", "#dc3545"],
+          data: [data.nb_homme, data.nb_femme, data.nb_autre],
+          backgroundColor: ["#007bff", "#dc3545","#e565f7"],
         },
       ],
     };
@@ -37,7 +37,7 @@ function createBarChart() {
 function createPieChart() {
   fetchData("pie").then((data) => {
     var pieData = {
-      labels: ["Clients Actifs", "Coachs Actifs", "Demeandes en cours"],
+      labels: ["Clients Actifs", "Coachs Actifs", "Inscriptions en cours"],
       datasets: [
         {
           data: [data.nb_client, data.nb_coach_act, data.nb_coach_inAct],
