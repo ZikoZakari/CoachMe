@@ -82,12 +82,10 @@ if (isset($_POST['nl-sub'])) {
     <div class="row align-items-center g-lg-5 py-5">
         <div class="col-lg-7 text-center text-lg-start">
             <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">
-                Vertically centered hero sign-up form
+                Découvrez votre potentiel physique
             </h1>
             <p class="col-lg-10 fs-4">
-                Below is an example form built entirely with Bootstrap’s form
-                controls. Each required form group has a validation state that can
-                be triggered by attempting to submit the form without completing it.
+                Inscrivez-vous dès maintenant pour une séance de découverte ou une évaluation de votre condition physique.
             </p>
         </div>
         <div class="col-md-10 mx-auto col-lg-5">
